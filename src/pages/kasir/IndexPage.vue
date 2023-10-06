@@ -345,7 +345,11 @@
           <div class="bg-blue-10 text-white q-py-xs">
             <div class="row flex flex-center">
               <q-space />
-              <q-btn flat class="q-mr-sm" @click="this.onBuy()"
+              <q-btn
+                flat
+                class="q-mr-sm"
+                :disable="this.uangMasuk < this.totalBelanja"
+                @click="this.onBuy()"
                 >Selesaikan Pesanan</q-btn
               >
             </div>
@@ -364,17 +368,15 @@ const model = () => {
     stok: null,
     satuan: null,
     deskripsi: null,
-    diskon: null
+    diskon: null,
+    modal: 0,
+    jumlahBeli: 0,
+    adaDiskon: 0
   };
 };
 
 const modelTransaksi = () => {
-  return {
-    user: null,
-    idWarung: null,
-    kode: null,
-    total: null
-  };
+  return { user: null, idWarung: null, kode: null, total: null, barang: [] };
 };
 
 export default {
@@ -407,6 +409,7 @@ export default {
       dataProduk: [],
       keranjangBelanja: [],
       totalBelanja: 0,
+      uangMasuk: 0,
       kodeTransaksi: null,
       pembayaran: null,
       nama: null,
@@ -479,7 +482,8 @@ export default {
 
       this.totalBelanja = sum;
 
-      this.pembayaran = this.totalBelanja - params;
+      this.pembayaran = params - this.totalBelanja;
+      this.uangMasuk = params;
     },
     async onBuy() {
       this.$q.loading.show();
@@ -487,6 +491,14 @@ export default {
       this.form.idWarung = this.dataUser.user.idWarung;
       this.form.kode = this.kodeTransaksi;
       this.form.total = this.totalBelanja;
+      for (let index = 0; index < this.keranjangBelanja.length; index++) {
+        this.keranjangBelanja[index].idTransaksi = this.kodeTransaksi;
+      }
+      // console.log(this.keranjangBelanja);
+
+      this.form.barang = this.keranjangBelanja;
+      console.log(this.keranjangBelanja);
+
       await this.$axios
         .post("transaksi/create", this.form)
         .finally(() => this.$q.loading.hide())
@@ -494,9 +506,9 @@ export default {
           if (!this.$parseResponse(response.data)) {
             this.$successNotif(response.data.message, "positive");
             this.keranjangBelanja = [];
-            this.totalBelanja = 0
-            this.harga = 0
-            this.dialogBayar = false
+            this.totalBelanja = 0;
+            this.harga = 0;
+            this.dialogBayar = false;
           }
         })
         .catch((err) => {
@@ -513,14 +525,24 @@ export default {
       this.dialogCheckout.satuan = DATA.satuan;
       this.dialogCheckout.keterangan = DATA.keterangan;
       this.dialogCheckout.diskon = DATA.diskon;
+      this.dialogCheckout = DATA;
     },
     onCheckout() {
       var namaProduk = this.dialogCheckout.nama;
-      var hargaProduk = this.dialogCheckout.harga;
+      var harga = this.dialogCheckout.harga;
       var beliProduk = this.newValue;
       var satuanProduk = this.dialogCheckout.satuan;
-      var diskonProduk = this.dialogCheckout.diskon;
+      var modal = this.dialogCheckout.modal;
+      var diskon = this.dialogCheckout.diskon;
+      var adaDiskon = 0;
+      if (diskon > 0) {
+        adaDiskon = 1;
+      }
+      var jumlahBeli = this.newValue;
 
+      console.log(this.dialogCheckout);
+
+      // dataBarang.harga = dataBarang.harga;
       var hargaDiskon =
         this.dialogCheckout.harga -
         (this.dialogCheckout.harga * this.dialogCheckout.diskon) / 100;
@@ -532,7 +554,11 @@ export default {
         beliProduk,
         totalBelanjaProduk,
         satuanProduk,
-        diskonProduk
+        harga,
+        diskon,
+        jumlahBeli,
+        modal,
+        adaDiskon
       });
 
       const sum = this.keranjangBelanja.reduce((accumulator, object) => {
