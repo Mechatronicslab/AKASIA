@@ -4,17 +4,35 @@
       <q-item-label
         style="font-size: 16px"
         class="text-weight-medium text-indigo-10"
-        >Setting Printer</q-item-label
+        >Menu yang tersedia</q-item-label
       >
       <q-item-label
         style="font-size: 12px"
         class="text-caption text-grey-6 q-mb-md"
-        >Setting printer sesuai dengan perangkat yang anda miliki.</q-item-label
+        >Seluruh menu yang ada di warung dan terdaftar di sistem.</q-item-label
       >
     </div>
 
     <div class="row">
-      <!-- <div class="col row items-start q-gutter-xs">
+      <div class="col-7 q-pr-xl">
+        <q-input
+          v-model="filter"
+          debounce="500"
+          outlined
+          clearable
+          dense
+          bg-color="white"
+          placeholder="Cari Produk..."
+        >
+          <template v-slot:prepend>
+            <q-icon name="search" />
+          </template>
+        </q-input>
+      </div>
+    </div>
+
+    <div class="row">
+      <div class="col row items-start q-gutter-xs">
         <q-table
           flat
           bordered
@@ -58,10 +76,10 @@
             </div>
           </template>
         </q-table>
-      </div> -->
+      </div>
       <div class="col-5">
         <q-card class="bg-grey-3 q-pa-sm q-px-md q-py-md" flat>
-          <!-- <div class="col">
+          <div class="col">
             <q-item-label style="font-size: 16px" class="text-weight-medium"
               >Keranjang Belanja</q-item-label
             >
@@ -70,8 +88,8 @@
               class="text-caption text-grey-6 q-mb-md"
               >Pesanan tamu dalam keranjang belanja.</q-item-label
             >
-          </div> -->
-          <!-- <q-list separator>
+          </div>
+          <q-list separator>
             <q-item
               clickable
               v-ripple
@@ -104,9 +122,9 @@
                 @click="this.hapusData(d.namaProduk)"
               ></q-btn>
             </q-item>
-          </q-list> -->
-          <!-- <q-separator /> -->
-          <!-- <div class="row q-mt-md flex flex-center">
+          </q-list>
+          <q-separator />
+          <div class="row q-mt-md flex flex-center">
             <q-item-label style="font-size: 20px" class="text-weight-bold"
               >TOTAL</q-item-label
             >
@@ -116,25 +134,7 @@
               class="text-caption text-weight-bold"
               >{{ $formatPrice(this.totalBelanja) }}</q-item-label
             >
-          </div> -->
-          <!-- <q-img
-            v-model="image"
-            src="images/icons/logo-black.png"
-            :ratio="16 / 9"
-          /> -->
-          <div>
-            <q-img
-              id="image"
-              src="images/icons/logosx.png"
-              width="100px"
-            ></q-img>
           </div>
-          <hr />
-          <q-input v-model="message"></q-input>
-          <q-input v-model="messageNote"></q-input>
-          <q-btn flat class="q-mr-sm" v-model="print" @click="this.btConnect()"
-            >Checkouts</q-btn
-          >
         </q-card>
 
         <q-card
@@ -352,47 +352,11 @@
           </div>
         </q-card>
       </q-dialog>
-
-      <div>
-        <div class="header">
-          <H1>Nama Toko</H1>
-          <p>Pringsewu</p>
-        </div>
-        <hr />
-        <div class="content">
-          <p>Nota: #123</p>
-          <p>Tanggal: 09/10/2023</p>
-          <hr />
-          <table>
-            <tr>
-              <th>Barang</th>
-              <th>Harga</th>
-              <th>Jumlah</th>
-            </tr>
-            <tr>
-              <td>Produk 1</td>
-              <td>Rp. 10.000</td>
-              <td>Produk 1</td>
-            </tr>
-          </table>
-          <hr />
-          <p>Total Harga : 10.000</p>
-          <p>Diskon : 0</p>
-          <p>Total Bayar : 10.000</p>
-        </div>
-        <hr />
-        <div class="footer">
-          <p>terimakasih sudah berbelanja di toko kami.</p>
-        </div>
-      </div>
     </div>
   </q-page>
 </template>
 
 <script>
-// import VueDrawingCanvas from "vue-drawing-canvas";
-import PNGbackground from "../../../public/images/icons/logosx.png";
-
 const model = () => {
   return {
     nama: null,
@@ -400,7 +364,7 @@ const model = () => {
     stok: null,
     satuan: null,
     deskripsi: null,
-    diskon: null,
+    diskon: null
   };
 };
 
@@ -409,38 +373,31 @@ const modelTransaksi = () => {
     user: null,
     idWarung: null,
     kode: null,
-    total: null,
+    total: null
   };
 };
 
 export default {
   name: "IndexPage",
-  // components: {
-  //   // eslint-disable-next-line vue/no-unused-components
-  //   VueDrawingCanvas
-  // },
+  components: {},
   props: {
     value: {
       default: 1,
-      type: Number,
+      type: Number
     },
     min: {
       default: 1,
-      type: Number,
+      type: Number
     },
     max: {
       default: undefined,
-      type: Number,
-    },
+      type: Number
+    }
   },
   data() {
     return {
-      canvas: null,
-      imageData: null,
-      printCharacteristic: null,
       GUID: null,
       dataUser: this.$q.localStorage.getItem("data"),
-      namaKasir: this.$q.localStorage.getItem("data").user.name,
       form: modelTransaksi(),
       harga: 0,
       dialogCheckout: model(),
@@ -460,25 +417,15 @@ export default {
           align: "center",
           label: "data",
           field: "data",
-          sortable: true,
-        },
+          sortable: true
+        }
       ],
       pagination: {
         page: 1,
         rowsPerPage: 50,
-        rowsNumber: 50,
+        rowsNumber: 50
       },
-      rows: [],
-      print: null,
-      image: PNGbackground,
-      // printable: null,
-      // message: "Lembah Akasia",
-      messageNote: "Nota Belanja Barang",
-      belanjaan: [
-        { nama: "Barang 1", harga: 10.0 },
-        { nama: "Barang 2", harga: 20.0 }
-      ],
-      total: 30.0
+      rows: []
     };
   },
   created() {
@@ -489,193 +436,8 @@ export default {
     async getData() {
       this.onRequest({
         pagination: this.pagination,
-        filter: this.filter,
+        filter: this.filter
       });
-    },
-    async printNota(printCharacteristic) {
-      const message = `
-      LEMBAH AKASIA
-      Telepon : 0878-1862-2563
-      ===========================
-      Nota : 092JX@89
-      Kasir : ${this.namaKasir.padEnd(2)}
-      Tgl : 09/10/2023
-
-      Nama Barang        Harga
-      ===========================
-      ${this.belanjaan
-        .map((item) => `${item.nama.padEnd(16)} $${item.harga.toFixed(2)}`)
-        .join("\n")}
-      ---------------------------
-      Total              $${this.total.toFixed(2)}
-      Terima kasih telah belanja di toko kami!
-    `;
-
-      let index = 0;
-      let data;
-      let imageData = this.imageData;
-      let canvas = this.canvas;
-
-      function getDarkPixel(x, y) {
-        //     // Return the pixels that will be printed black
-        let red = imageData[(canvas.width * y + x) * 4];
-        let green = imageData[(canvas.width * y + x) * 4 + 1];
-        let blue = imageData[(canvas.width * y + x) * 4 + 2];
-        return red + green + blue > 0 ? 1 : 0;
-      }
-
-      function getImagePrintData() {
-        if (imageData == null) {
-          console.log("No image to print!");
-          return new Uint8Array([]);
-        }
-        //     // Each 8 pixels in a row is represented by a byte
-        let printData = new Uint8Array((canvas.width / 8) * canvas.height + 8);
-        let offset = 0;
-        //     // Set the header bytes for printing the image
-        printData[0] = 29; // Print raster bitmap
-        printData[1] = 118; // Print raster bitmap
-        printData[2] = 48; // Print raster bitmap
-        printData[3] = 0; // Normal 203.2 DPI
-        printData[4] = canvas.width / 8; // Number of horizontal data bits (LSB)
-        printData[5] = 0; // Number of horizontal data bits (MSB)
-        printData[6] = canvas.height % 256; // Number of vertical data bits (LSB)
-        printData[7] = canvas.height / 256; // Number of vertical data bits (MSB)
-        offset = 7;
-        //     // Loop through image rows in bytes
-        for (let i = 0; i < canvas.height; ++i) {
-          for (let k = 0; k < canvas.width / 8; ++k) {
-            let k8 = k * 8;
-            //         //  Pixel to bit position mapping
-            printData[++offset] =
-              getDarkPixel(k8 + 0, i) * 128 +
-              getDarkPixel(k8 + 1, i) * 64 +
-              getDarkPixel(k8 + 2, i) * 32 +
-              getDarkPixel(k8 + 3, i) * 16 +
-              getDarkPixel(k8 + 4, i) * 8 +
-              getDarkPixel(k8 + 5, i) * 4 +
-              getDarkPixel(k8 + 6, i) * 2 +
-              getDarkPixel(k8 + 7, i);
-          }
-        }
-        return printData;
-      }
-
-      function sendNextImageDataBatch(resolve, reject) {
-        //     // Can only write 512 bytes at a time to the characteristic
-        //     // Need to send the image data in 512 byte batches
-        if (index + 512 < data.length) {
-          printCharacteristic
-            .writeValue(data.slice(index, index + 512))
-            .then(() => {
-              index += 512;
-              sendNextImageDataBatch(resolve, reject);
-            })
-            .catch((error) => reject(error));
-        } else {
-          //       // Send the last bytes
-          if (index < data.length) {
-            printCharacteristic
-              .writeValue(data.slice(index, data.length))
-              .then(() => {
-                resolve();
-              })
-              .catch((error) => reject(error));
-          } else {
-            resolve();
-          }
-        }
-      }
-
-      async function sendImageData() {
-        index = 0;
-        data = await getImagePrintData();
-        return new Promise(async function (resolve, reject) {
-          await sendNextImageDataBatch(resolve, reject);
-        });
-      }
-
-      function sendTextData() {
-        //     // Get the bytes for the text
-        let encoder = new TextEncoder("utf-8");
-        //     // Add line feed + carriage return chars to text
-        let text = encoder.encode(message);
-        return printCharacteristic.writeValue(text).then(() => {
-          console.log("Write done.");
-        });
-      }
-
-      async function sendPrinterData() {
-        //     // Print an image followed by the text
-        await sendImageData()
-          .then(sendTextData)
-          .then(() => {
-            progress.hidden = true;
-          })
-          .catch(handleError);
-      }
-
-      function handleError(error) {
-        console.log(error);
-        //     // progress.hidden = true;
-        printCharacteristic = null;
-        //     // dialog.open();
-      }
-      await sendPrinterData();
-    },
-    btConnect: async function () {
-      this.canvas = document.createElement("canvas");
-
-      this.canvas.width = 120;
-      this.canvas.height = 120;
-      let context = this.canvas.getContext("2d");
-      var imgnya = new Image();
-      imgnya.src = PNGbackground;
-      context.drawImage(imgnya, 0, 0, this.canvas.width, this.canvas.height);
-      this.imageData = context.getImageData(
-        0,
-        0,
-        this.canvas.width,
-        this.canvas.height
-      ).data;
-      if (this.printCharacteristic == null) {
-        navigator.bluetooth
-          .requestDevice({
-            filters: [
-              {
-                services: ["000018f0-0000-1000-8000-00805f9b34fb"],
-              },
-            ],
-          })
-          .then((device) => {
-            console.log("> Found " + device.name);
-            console.log("Connecting to GATT Server...");
-            return device.gatt.connect();
-          })
-          .then((server) =>
-            server.getPrimaryService("000018f0-0000-1000-8000-00805f9b34fb")
-          )
-          .then((service) =>
-            service.getCharacteristic("00002af1-0000-1000-8000-00805f9b34fb")
-          )
-          .then((characteristic) => {
-            //         // Cache the characteristic
-            this.printCharacteristic = characteristic;
-
-            console.log("Bluetoth berhasil konek");
-            sendPrinterData();
-          })
-          .catch(handleError);
-      } else {
-        this.printNota(this.printCharacteristic);
-      }
-
-      function handleError(error) {
-        console.log(error);
-        //     // progress.hidden = true;
-        printCharacteristic = null;
-        //     // dialog.open();
-      }
     },
     onRequest(props) {
       this.$q.loading.show();
@@ -732,9 +494,9 @@ export default {
           if (!this.$parseResponse(response.data)) {
             this.$successNotif(response.data.message, "positive");
             this.keranjangBelanja = [];
-            this.totalBelanja = 0;
-            this.harga = 0;
-            this.dialogBayar = false;
+            this.totalBelanja = 0
+            this.harga = 0
+            this.dialogBayar = false
           }
         })
         .catch((err) => {
@@ -770,7 +532,7 @@ export default {
         beliProduk,
         totalBelanjaProduk,
         satuanProduk,
-        diskonProduk,
+        diskonProduk
       });
 
       const sum = this.keranjangBelanja.reduce((accumulator, object) => {
@@ -811,15 +573,15 @@ export default {
         this.newValue = this.newValue - 1;
         this.$emit("input", this.newValue);
       }
-    },
+    }
   },
   watch: {
     value: {
       handler: function (newVal, oldVal) {
         this.newValue = newVal;
-      },
-    },
-  },
+      }
+    }
+  }
   // created: function () {
   //   this.newValue = this.value;
   // }

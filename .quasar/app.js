@@ -12,6 +12,8 @@
 
 
 
+
+
 import { Quasar } from 'quasar'
 import { markRaw } from 'vue'
 import RootComponent from 'app/src/App.vue'
