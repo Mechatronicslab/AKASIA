@@ -38,7 +38,8 @@ const parseDate = (date) => {
       dateLocal: [year, month < 10 ? 0 + '' + (month) : (month), tgl < 10 ? 0 + '' + tgl : tgl].join('/'),
       fullDate: full,
       timeStap: `${full} ${newDate.getHours()}:${newDate.getMinutes()}:${newDate.getSeconds()}`,
-      years: year
+      years: year,
+      dateLocal_id: [month < 10 ? 0 + '' + (month) : (month), tgl < 10 ? 0 + '' + tgl : tgl, year].join('/')
     }
   }
   return respon

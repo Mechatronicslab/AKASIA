@@ -24,7 +24,7 @@
                 >
                 <q-item-label
                   class="text-h6 text-weight-bold text-indigo-10 counter-animation"
-                  >{{ this.countKecamatan }}</q-item-label
+                  >{{ this.countTiket }}</q-item-label
                 >
               </q-item-section>
             </q-item>
@@ -85,7 +85,7 @@
             size="sm"
             class="q-ml-sm"
             label="Tambah Harga Tiket"
-            @click="addDialog = true"
+            @click="onAddData()"
           />
         </template>
         <template v-slot:header="props">
@@ -103,17 +103,18 @@
         <template v-slot:body="props">
           <q-tr :props="props">
             <q-td key="JENIS" :props="props" class="text-capitalize">
-              {{ props.row.nama }}
+              {{ props.row.label }}
             </q-td>
             <q-td key="HARGA" :props="props" class="text-capitalize">
-              {{ props.row.keterangan }}
+              {{ $formatPrice(props.row.harga) }}
             </q-td>
             <q-td key="DISKON" :props="props" class="text-capitalize">
-              {{ props.row.keterangan }}
+              {{ props.row.diskon }}
             </q-td>
-            <q-td key="TGL_DAFTAR" :props="props" class="text-capitalize">
-              {{ $parseDate(props.row.created_at).timeStap }}
+            <q-td key="DISKON" :props="props" class="text-capitalize">
+              {{ $parseDate(props.row.expiredDiskon).fullDate }}
             </q-td>
+
             <q-td key="ACTION" :props="props" class="text-capitalize">
               <q-btn
                 round
@@ -145,7 +146,7 @@
           <q-card-section class="bg-blue-10 text-white">
             <div class="text-h6">TAMBAH DATA HARGA TIKET</div>
             <div class="text-caption">
-              Pastikan melakukan pengecekan data sebelum merubah data.
+              Pastikan melakukan pengecekan data sebelum input data.
             </div>
           </q-card-section>
 
@@ -153,7 +154,7 @@
             <div class="row items-start">
               <q-input
                 standout="bg-blue-10 text-white"
-                v-model="form.nama"
+                v-model="form.label"
                 class="text-white col-4 q-pa-sm text-capitalize"
                 label="Jenis Tiket ex: Dewasa, Anak-Anak"
                 dense
@@ -197,6 +198,21 @@
                   <q-icon name="local_offer" class="q-pr-md" />
                 </template>
               </q-input>
+
+              <q-input
+                standout="bg-blue-10 text-white"
+                v-model="form.expiredDiskon"
+                class="text-white col-4 q-pa-sm text-capitalize"
+                label="TGL. BERAKHIR DISKON"
+                dense
+                lazy-rules
+                type="date"
+                :rules="defaultRules"
+              >
+                <template v-slot:prepend>
+                  <q-icon name="local_offer" class="q-pr-md" />
+                </template>
+              </q-input>
             </div>
           </q-card-section>
 
@@ -221,12 +237,10 @@
             <div class="row items-start">
               <q-input
                 standout="bg-blue-10 text-white"
-                v-model="form.nama"
+                v-model="form.label"
                 class="text-white col-4 q-pa-sm text-capitalize"
                 label="Jenis Tiket ex: Dewasa, Anak-Anak"
                 dense
-                lazy-rules
-                :rules="defaultRules"
               >
                 <template v-slot:prepend>
                   <q-icon name="pin" class="q-pr-md" />
@@ -237,14 +251,11 @@
                 v-model="form.harga"
                 class="text-white col-4 q-pa-sm text-capitalize"
                 label="Harga Tiket"
-                mask="#.###"
+                mask="#.###.###.###"
                 prefix="Rp. "
-                fill-mask="0"
                 unmasked-value
                 reverse-fill-mask
                 dense
-                lazy-rules
-                :rules="defaultRules"
               >
                 <template v-slot:prepend>
                   <q-icon name="payments" class="q-pr-md" />
@@ -258,8 +269,19 @@
                 mask="###"
                 suffix="%"
                 dense
-                lazy-rules
-                :rules="defaultRules"
+              >
+                <template v-slot:prepend>
+                  <q-icon name="local_offer" class="q-pr-md" />
+                </template>
+              </q-input>
+
+              <q-input
+                standout="bg-blue-10 text-white"
+                v-model="form.expiredDiskon"
+                class="text-white col-4 q-pa-sm text-capitalize"
+                label="TGL. BERAKHIR DISKON"
+                dense
+                type="date"
               >
                 <template v-slot:prepend>
                   <q-icon name="local_offer" class="q-pr-md" />
@@ -304,7 +326,7 @@
 
         <q-card-actions align="right">
           <q-btn
-            @click="this.deleteData(this.GUID)"
+            @click="this.deleteData(this.id)"
             flat
             label="Lanjutkan"
             color="white"
@@ -317,10 +339,15 @@
 </template>
 
 <script>
+import format from "date-fns/format";
+
 const model = () => {
   return {
-    nama: null,
-    keterangan: null
+    id: null,
+    label: null,
+    harga: null,
+    diskon: null,
+    expiredDiskon: null
   };
 };
 
@@ -329,7 +356,8 @@ export default {
   components: {},
   data() {
     return {
-      GUID: null,
+      id: null,
+      countTiket: null,
       form: model(),
       defaultRules: [
         (val) => (val && val.length > 0) || "Tolong isikan data..."
@@ -361,7 +389,7 @@ export default {
         {
           name: "TGL_DAFTAR",
           align: "left",
-          label: "TGL. DAFTAR",
+          label: "TGL. BERAKHIR DISKON",
           field: "TGL_DAFTAR"
         },
         {
@@ -383,17 +411,30 @@ export default {
     };
   },
   created() {
-    this.getSatuan();
+    this.getTiket();
+    this.getCountTiket();
   },
   methods: {
-    getSatuan: async function () {
+    getTiket: async function () {
       this.$q.loading.show();
       await this.$axios
-        .get(`satuan`)
+        .get(`tiket`)
         .finally(() => this.$q.loading.hide())
         .then((response) => {
           if (!this.$parseResponse(response.data)) {
             this.rows = response.data.data;
+          }
+        })
+        .catch(() => this.$commonErrorNotif());
+    },
+    getCountTiket: async function () {
+      this.$q.loading.show();
+      await this.$axios
+        .get(`tiket/get/count`)
+        .finally(() => this.$q.loading.hide())
+        .then((response) => {
+          if (!this.$parseResponse(response.data)) {
+            this.countTiket = response.data.data;
           }
         })
         .catch(() => this.$commonErrorNotif());
@@ -407,54 +448,64 @@ export default {
     async onCreate() {
       this.$q.loading.show();
       await this.$axios
-        .post("satuan/create", this.form)
+        .post("tiket/create", this.form)
         .finally(() => this.$q.loading.hide())
         .then((response) => {
           if (!this.$parseResponse(response.data)) {
             this.$successNotif(response.data.message, "positive");
             this.resetField();
-            this.getSatuan();
+            this.getTiket();
           }
         })
         .catch((err) => {
           console.log(err.response.data);
-          // this.$commonErrorNotif();
+          this.$commonErrorNotif();
         });
     },
+    onAddData() {
+      this.addDialog = true;
+      this.resetField();
+    },
+
     onEdit() {
       this.onUpdate();
     },
     editData(DATA) {
       this.editDialog = true;
-      this.form.nama = DATA.nama;
-      this.form.keterangan = DATA.keterangan;
-      this.GUID = DATA.GUID;
+      this.form.id = DATA.id;
+      this.form.label = DATA.label;
+      this.form.diskon = DATA.diskon;
+      this.form.harga = DATA.harga;
+      this.form.expiredDiskon = format(
+        new Date(DATA.expiredDiskon),
+        "yyyy-MM-dd"
+      );
     },
     onUpdate() {
       this.$q.loading.show();
       this.$axios
-        .put(`satuan/update/${this.GUID}`, this.form)
+        .put(`tiket/update/${this.form.id}`, this.form)
         .finally(() => this.$q.loading.hide())
         .then((response) => {
           if (!this.$parseResponse(response.data)) {
             this.editDialog = false;
-            this.getSatuan();
+            this.getTiket();
           }
         })
         .catch(() => this.$commonErrorNotif());
     },
     delete(DATA) {
       this.deleteDialog = true;
-      this.GUID = DATA.GUID;
+      this.id = DATA.id;
     },
     deleteData() {
       this.$q.loading.show();
       this.$axios
-        .delete(`satuan/${this.GUID}`)
+        .delete(`tiket/${this.id}`)
         .finally(() => this.$q.loading.hide())
         .then((response) => {
           if (!this.$parseResponse(response.data)) {
-            this.getSatuan();
+            this.getTiket();
           }
         })
         .catch(() => this.$commonErrorNotif());
