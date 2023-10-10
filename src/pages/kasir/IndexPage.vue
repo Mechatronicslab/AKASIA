@@ -392,16 +392,16 @@ export default {
   props: {
     value: {
       default: 1,
-      type: Number,
+      type: Number
     },
     min: {
       default: 1,
-      type: Number,
+      type: Number
     },
     max: {
       default: undefined,
-      type: Number,
-    },
+      type: Number
+    }
   },
   data() {
     return {
@@ -432,13 +432,13 @@ export default {
           align: "center",
           label: "data",
           field: "data",
-          sortable: true,
-        },
+          sortable: true
+        }
       ],
       pagination: {
         page: 1,
         rowsPerPage: 50,
-        rowsNumber: 50,
+        rowsNumber: 50
       },
       rows: [],
       print: null,
@@ -457,7 +457,7 @@ export default {
     async getData() {
       this.onRequest({
         pagination: this.pagination,
-        filter: this.filter,
+        filter: this.filter
       });
     },
     onRequest(props) {
@@ -534,7 +534,12 @@ Tgl : ${dateBuy}
 
 Nama Barang      Harga
 ================================
-${this.keranjangBelanja.map((item) =>`${item.namaProduk.padEnd(16)} Rp. ${this.$formatPrice(item.hargaDiskon)}`).join("\n")}
+${this.keranjangBelanja
+  .map(
+    (item) =>
+      `${item.namaProduk.padEnd(16)} Rp. ${this.$formatPrice(item.hargaDiskon)}`
+  )
+  .join("\n")}
 --------------------------------
 Total              ${totalBelanja}
 Dibayarkan         ${uangMasuk}
@@ -820,6 +825,7 @@ Terima, datang kembali!
         //     // dialog.open();
       }
       await sendPrinterData();
+      await this.insertData();
     },
     btConnect: async function () {
       this.canvas = document.createElement("canvas");

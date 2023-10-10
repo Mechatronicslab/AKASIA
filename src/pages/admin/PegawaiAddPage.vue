@@ -204,8 +204,11 @@ export default {
       this.form = model();
     },
     async onCreate() {
+      console.log(this.form);
       this.$q.loading.show();
-      this.form.idWarung = this.form.idWarung.GUID
+      if (this.form.idWarung !== null) {
+        this.form.idWarung = this.form.idWarung.GUID;
+      }
       await this.$axios
         .post("users/create", this.form)
         .finally(() => this.$q.loading.hide())
