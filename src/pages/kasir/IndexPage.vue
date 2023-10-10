@@ -142,21 +142,21 @@
           align="right"
           flat
         >
-          <!-- <q-btn
+          <q-btn
             flat
             class="text-blue-10 bg-white"
             :disable="this.totalBelanja === 0"
             @click="this.buy(this.keranjangBelanja)"
             >Bayar Sekarang</q-btn
-          > -->
+          >
 
-          <q-btn
+          <!-- <q-btn
             flat
             class="text-blue-10 bg-white"
             :disable="this.totalBelanja === 0"
             @click="this.btConnect()"
             >Bayar Sekarang</q-btn
-          >
+          > -->
         </q-card>
       </div>
 
