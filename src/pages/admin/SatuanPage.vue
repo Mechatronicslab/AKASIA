@@ -4,7 +4,7 @@
       <q-item-label
         style="font-size: 16px"
         class="text-weight-medium text-indigo-10"
-        >Main Satuan</q-item-label
+        >Satuan barang</q-item-label
       >
       <q-item-label
         style="font-size: 12px"
@@ -13,40 +13,7 @@
         sistem.</q-item-label
       >
     </div>
-    <q-card class="my-card q-pa-md">
-      <div class="row q-gutter-sm">
-        <div class="col">
-          <q-card class="my-card bg-grey-3" flat>
-            <q-item clickable v-ripple>
-              <q-item-section>
-                <q-item-label caption class="text-weight-medium q-mb-xs"
-                  >Total satuan</q-item-label
-                >
-                <q-item-label
-                  class="text-h6 text-weight-bold text-indigo-10 counter-animation"
-                  >{{ this.countKecamatan }}</q-item-label
-                >
-              </q-item-section>
-            </q-item>
-          </q-card>
-        </div>
-
-        <div class="col"></div>
-
-        <div class="col"></div>
-      </div>
-
-      <q-item-label
-        style="font-size: 16px"
-        class="text-weight-medium text-indigo-10 q-mt-md"
-        >Table data satuan</q-item-label
-      >
-      <q-item-label
-        style="font-size: 12px"
-        class="text-caption text-grey-6 q-mb-md"
-        >Seluruh data satuan yang terdaftar dalam sistem.</q-item-label
-      >
-
+    <q-card class="my-card" flat>
       <q-table :rows="rows" :columns="columns" :pagination="pagination">
         <template v-slot:top>
           <q-space />
@@ -81,25 +48,11 @@
             @click="addDialog = true"
           />
         </template>
-        <template v-slot:header="props">
-          <q-tr :props="props">
-            <q-th
-              v-for="col in props.cols"
-              :key="col.name"
-              :props="props"
-              class="text-blue-10"
-            >
-              {{ col.label }}
-            </q-th>
-          </q-tr>
-        </template>
         <template v-slot:body="props">
           <q-tr :props="props">
-            <q-td key="NAMA" :props="props" class="text-capitalize">
-              {{ props.row.nama }}
-            </q-td>
             <q-td key="KETERANGAN" :props="props" class="text-capitalize">
-              {{ props.row.keterangan }}
+              {{ props.row.keterangan }}<br>
+              <q-badge color="blue-10">{{ props.row.nama }}</q-badge>
             </q-td>
             <q-td key="TGL_DAFTAR" :props="props" class="text-capitalize">
               {{ $parseDate(props.row.created_at).timeStap }}
@@ -294,12 +247,6 @@ export default {
       editDialog: false,
       deleteDialog: false,
       columns: [
-        {
-          name: "NAMA",
-          align: "left",
-          label: "NAMA SATUAN",
-          field: "NAMA"
-        },
         {
           name: "KETERANGAN",
           align: "left",

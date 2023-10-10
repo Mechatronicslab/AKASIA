@@ -14,15 +14,13 @@
                 this.dataUser.user.name
               }}</q-item-label>
               <q-item-label caption class="text-white">
-                <q-badge color="white" class="text-blue-10">Bagian kasir</q-badge>
+                <q-badge color="white" class="text-blue-10">Bagian tiket</q-badge>
               </q-item-label>
             </q-item-section>
           </q-item>
         </div>
 
         <q-space />
-
-        <q-btn flat dense round icon="print" aria-label="Setting Printer" :to="{ name: 'printer' }" />
 
         <q-btn flat dense round icon="menu" aria-label="Menu">
           <q-menu transition-show="jump-down" transition-hide="jump-up">

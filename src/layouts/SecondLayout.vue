@@ -14,7 +14,7 @@
         <q-space />
 
         <div class="row q-gutter-md">
-          <q-btn flat size="md" icon="account_circle" label="Administrator">
+          <q-btn flat size="md" icon="account_circle">
             <q-menu transition-show="jump-down" transition-hide="jump-up">
               <q-list style="min-width: 100px">
                 <q-item clickable v-ripple>
@@ -28,7 +28,7 @@
                     />
                   </q-item-section>
                   <q-item-section>
-                    <q-item-label>Administrator</q-item-label>
+                    <q-item-label>{{this.dataUser.user.name}}</q-item-label>
                     <q-item-label caption>be admin</q-item-label>
                   </q-item-section>
                   <q-item-section side>
@@ -56,7 +56,7 @@
       <q-card
         class="my-card q-ma-sm flex text-indigo-10 text-subtitle2"
         style="
-          height: 130px;
+          height: 100px;
           background: linear-gradient(
               0deg,
               rgba(0, 0, 0, 0.5),
@@ -73,17 +73,17 @@
           </q-item-section>
 
           <q-item-section>
-            <q-item-label class="text-white">Administrator</q-item-label>
+            <q-item-label class="text-white">{{this.dataUser.user.name}}</q-item-label>
             <q-badge color="white" class="q-mt-xs">
               <q-item-label caption class="text-blue-10"
-                >admin@gmail.com</q-item-label
+                >{{this.dataUser.user.email}}</q-item-label
               >
             </q-badge>
           </q-item-section>
         </q-item>
       </q-card>
 
-      <q-card class="my-card q-mx-sm q-mt-md" style="height: auto">
+      <q-card class="my-card q-mt-md" flat>
         <q-list>
           <q-item-label
             class="navigation-item text-grey-7 text-weight-medium"
@@ -151,45 +151,31 @@
             </q-item>
           </q-expansion-item>
 
-          <q-expansion-item
+          <q-item
+            active-class="tab-active"
+            exact
             class="navigation-item text-grey-6 text-weight-medium"
+            clickable
+            :to="{ name: 'kasir' }"
+            v-ripple
           >
-            <template v-slot:header>
-              <q-item-section avatar>
-                <q-avatar
-                  rounded
-                  size="30px"
-                  color="blue-10"
-                  text-color="white"
-                  icon="inventory"
-                />
-              </q-item-section>
-              <q-item-section> Produk </q-item-section>
-            </template>
-            <q-item
-              active-class="tab-active"
-              class="navigation-item text-blue-10 text-weight-light bg-grey-3"
-              exact
-              clickable
-              :to="{ name: 'produk' }"
-              v-ripple
-            >
-              <q-item-section avatar> </q-item-section>
-              <q-item-section> Data Produk </q-item-section>
-            </q-item>
-            <q-separator />
-            <q-item
-              active-class="tab-active"
-              class="navigation-item text-blue-10 text-weight-light bg-grey-3"
-              exact
-              clickable
-              :to="{ name: 'produk_add' }"
-              v-ripple
-            >
-              <q-item-section avatar> </q-item-section>
-              <q-item-section> Tambah Produk </q-item-section>
-            </q-item>
-          </q-expansion-item>
+            <q-item-section avatar>
+              <q-avatar
+                rounded
+                size="30px"
+                color="blue-10"
+                text-color="white"
+                icon="pin"
+              />
+            </q-item-section>
+            <q-item-section> Kasir </q-item-section>
+          </q-item>
+
+          <q-item-label
+            class="navigation-item text-grey-7 text-weight-medium"
+            header
+            >Extras</q-item-label
+          >
 
           <q-expansion-item
             class="navigation-item text-grey-6 text-weight-medium"
@@ -231,12 +217,6 @@
             </q-item>
           </q-expansion-item>
 
-          <q-item-label
-            class="navigation-item text-grey-7 text-weight-medium"
-            header
-            >Extras</q-item-label
-          >
-
           <q-expansion-item
             class="navigation-item text-grey-6 text-weight-medium"
           >
@@ -277,6 +257,46 @@
             </q-item>
           </q-expansion-item>
 
+          <q-expansion-item
+            class="navigation-item text-grey-6 text-weight-medium"
+          >
+            <template v-slot:header>
+              <q-item-section avatar>
+                <q-avatar
+                  rounded
+                  size="30px"
+                  color="blue-10"
+                  text-color="white"
+                  icon="inventory"
+                />
+              </q-item-section>
+              <q-item-section> Produk </q-item-section>
+            </template>
+            <q-item
+              active-class="tab-active"
+              class="navigation-item text-blue-10 text-weight-light bg-grey-3"
+              exact
+              clickable
+              :to="{ name: 'produk' }"
+              v-ripple
+            >
+              <q-item-section avatar> </q-item-section>
+              <q-item-section> Data Produk </q-item-section>
+            </q-item>
+            <q-separator />
+            <q-item
+              active-class="tab-active"
+              class="navigation-item text-blue-10 text-weight-light bg-grey-3"
+              exact
+              clickable
+              :to="{ name: 'produk_add' }"
+              v-ripple
+            >
+              <q-item-section avatar> </q-item-section>
+              <q-item-section> Tambah Produk </q-item-section>
+            </q-item>
+          </q-expansion-item>
+
           <q-item
             active-class="tab-active"
             exact
@@ -296,31 +316,12 @@
             </q-item-section>
             <q-item-section> Satuan Barang </q-item-section>
           </q-item>
-
-          <q-item
-            active-class="tab-active"
-            exact
-            class="navigation-item text-grey-6 text-weight-medium"
-            clickable
-            :to="{ name: 'kasir' }"
-            v-ripple
-          >
-            <q-item-section avatar>
-              <q-avatar
-                rounded
-                size="30px"
-                color="blue-10"
-                text-color="white"
-                icon="pin"
-              />
-            </q-item-section>
-            <q-item-section> Kasir </q-item-section>
-          </q-item>
         </q-list>
       </q-card>
 
       <q-card
         class="my-card q-ma-sm q-mt-md flex text-indigo-10 text-subtitle2"
+        flat
         style="
           height: 70px;
           background-repeat: no-repeat;

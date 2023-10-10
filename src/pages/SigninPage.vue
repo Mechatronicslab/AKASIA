@@ -101,6 +101,8 @@ export default {
             this.$q.localStorage.set("data", data);
             if (role === 0) {
               this.$router.push({ name: "admin" });
+            } else if (role === 2) {
+              this.$router.push({ name: "tiket" });
             } else if (role === 3) {
               this.$router.push({ name: "kasir" });
             } else {

@@ -4,31 +4,15 @@
       <q-item-label
         style="font-size: 16px"
         class="text-weight-medium text-indigo-10"
-        >Menu yang tersedia</q-item-label
       >
+        Tiket masuk wisata
+      </q-item-label>
       <q-item-label
         style="font-size: 12px"
         class="text-caption text-grey-6 q-mb-md"
-        >Seluruh menu yang ada di warung dan terdaftar di sistem.</q-item-label
       >
-    </div>
-
-    <div class="row">
-      <div class="col-7 q-pr-xl">
-        <q-input
-          v-model="filter"
-          debounce="500"
-          outlined
-          clearable
-          dense
-          bg-color="white"
-          placeholder="Cari Produk..."
-        >
-          <template v-slot:prepend>
-            <q-icon name="search" />
-          </template>
-        </q-input>
-      </div>
+        Seluruh menu yang ada di warung dan terdaftar di sistem.
+      </q-item-label>
     </div>
 
     <div class="row">
@@ -447,34 +431,26 @@ export default {
     };
   },
   created() {
-    this.getData();
+    this.onRequest();
     this.newValue = this.value;
     const curretTimestamp = Date.now();
     const currentDate = new Date(curretTimestamp);
     this.dateNow = currentDate;
   },
   methods: {
-    async getData() {
-      this.onRequest({
-        pagination: this.pagination,
-        filter: this.filter,
-      });
-    },
-    onRequest(props) {
+    onRequest() {
       this.$q.loading.show();
       this.$axios
-        .get(
-          `produk/?filter=${this.filter === "" ? null : this.filter}`,
-          this.$createPaginate(props)
-        )
+        .get(`tiket/`)
         .finally(() => this.$q.loading.hide())
         .then((response) => {
           if (!this.$parseResponse(response.data)) {
             this.rows = response.data.data;
-            this.pagination.rowsPerPage = Number(response.data.resPerPage);
-            this.pagination.page = Number(response.data.page);
-            this.pagination.rowsNumber = Number(response.data.countData);
-            this.loading = false;
+            console.log(response.data.data)
+            // this.pagination.rowsPerPage = Number(response.data.resPerPage);
+            // this.pagination.page = Number(response.data.page);
+            // this.pagination.rowsNumber = Number(response.data.countData);
+            // this.loading = false;
           }
         })
         .catch(() => this.$commonErrorNotif());
@@ -528,19 +504,19 @@ LEMBAH AKASIA
 Sukoharjo I, Pringsewu
 Telepon : 0878-1862-2563
 ================================
-Nota  : ${nomorNota}
+Nota : ${nomorNota}
 Kasir : ${namaKasir}
-Tgl   : ${dateBuy}
+Tgl : ${dateBuy}
 
 Nama Barang      Harga
 ================================
-${this.keranjangBelanja.map((item) =>`${item.namaProduk.padEnd(16)} ${this.$formatPrice(item.hargaDiskon)}`).join("\n")}
+${this.keranjangBelanja.map((item) =>`${item.namaProduk.padEnd(16)} Rp. ${this.$formatPrice(item.hargaDiskon)}`).join("\n")}
 --------------------------------
 Total              ${totalBelanja}
 Dibayarkan         ${uangMasuk}
 Kembalian          ${kembalian}
 
-Terima kasih, datang kembali!
+Terima, datang kembali!
 `;
 
       await this.btConnect();
@@ -820,7 +796,6 @@ Terima kasih, datang kembali!
         //     // dialog.open();
       }
       await sendPrinterData();
-      await this.insertData();
     },
     btConnect: async function () {
       this.canvas = document.createElement("canvas");
