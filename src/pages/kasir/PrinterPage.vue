@@ -130,8 +130,8 @@
             ></q-img>
           </div>
           <hr />
-          <q-input v-model="message" ></q-input>
-          <q-input v-model="messageNote" ></q-input>
+          <q-input v-model="message"></q-input>
+          <q-input v-model="messageNote"></q-input>
           <q-btn flat class="q-mr-sm" v-model="print" @click="this.btConnect()"
             >Checkouts</q-btn
           >
@@ -357,7 +357,7 @@
 </template>
 
 <script>
-import VueDrawingCanvas from "vue-drawing-canvas";
+// import VueDrawingCanvas from "vue-drawing-canvas";
 import PNGbackground from "../../../public/images/icons/logosx.png";
 
 const model = () => {
@@ -367,7 +367,7 @@ const model = () => {
     stok: null,
     satuan: null,
     deskripsi: null,
-    diskon: null
+    diskon: null,
   };
 };
 
@@ -376,29 +376,29 @@ const modelTransaksi = () => {
     user: null,
     idWarung: null,
     kode: null,
-    total: null
+    total: null,
   };
 };
 
 export default {
   name: "IndexPage",
-  components: {
-    // eslint-disable-next-line vue/no-unused-components
-    VueDrawingCanvas
-  },
+  // components: {
+  //   // eslint-disable-next-line vue/no-unused-components
+  //   VueDrawingCanvas
+  // },
   props: {
     value: {
       default: 1,
-      type: Number
+      type: Number,
     },
     min: {
       default: 1,
-      type: Number
+      type: Number,
     },
     max: {
       default: undefined,
-      type: Number
-    }
+      type: Number,
+    },
   },
   data() {
     return {
@@ -426,13 +426,13 @@ export default {
           align: "center",
           label: "data",
           field: "data",
-          sortable: true
-        }
+          sortable: true,
+        },
       ],
       pagination: {
         page: 1,
         rowsPerPage: 50,
-        rowsNumber: 50
+        rowsNumber: 50,
       },
       rows: [],
       print: null,
@@ -449,164 +449,9 @@ export default {
     async getData() {
       this.onRequest({
         pagination: this.pagination,
-        filter: this.filter
+        filter: this.filter,
       });
     },
-    // btConnect: async function () {
-    //   let message = this.message;
-    //   let printCharacteristic;
-    //   let index = 0;
-    //   let data;
-    //   let canvas = document.createElement("canvas");
-
-    //   canvas.width = 120;
-    //   canvas.height = 120;
-    //   let context = canvas.getContext("2d");
-    //   var imgnya = new Image();
-    //   imgnya.src = PNGbackground;
-    //   await context.drawImage(imgnya, 0, 0, canvas.width, canvas.height);
-    //   let imageData = context.getImageData(
-    //     0,
-    //     0,
-    //     canvas.width,
-    //     canvas.height
-    //   ).data;
-    //   function getDarkPixel(x, y) {
-    //     // Return the pixels that will be printed black
-    //     let red = imageData[(canvas.width * y + x) * 4];
-    //     let green = imageData[(canvas.width * y + x) * 4 + 1];
-    //     let blue = imageData[(canvas.width * y + x) * 4 + 2];
-    //     return red + green + blue > 0 ? 1 : 0;
-    //   }
-
-    //   function getImagePrintData() {
-    //     if (imageData == null) {
-    //       console.log("No image to print!");
-    //       return new Uint8Array([]);
-    //     }
-    //     // Each 8 pixels in a row is represented by a byte
-    //     let printData = new Uint8Array((canvas.width / 8) * canvas.height + 8);
-    //     let offset = 0;
-    //     // Set the header bytes for printing the image
-    //     printData[0] = 29; // Print raster bitmap
-    //     printData[1] = 118; // Print raster bitmap
-    //     printData[2] = 48; // Print raster bitmap
-    //     printData[3] = 0; // Normal 203.2 DPI
-    //     printData[4] = canvas.width / 8; // Number of horizontal data bits (LSB)
-    //     printData[5] = 0; // Number of horizontal data bits (MSB)
-    //     printData[6] = canvas.height % 256; // Number of vertical data bits (LSB)
-    //     printData[7] = canvas.height / 256; // Number of vertical data bits (MSB)
-    //     offset = 7;
-    //     // Loop through image rows in bytes
-    //     for (let i = 0; i < canvas.height; ++i) {
-    //       for (let k = 0; k < canvas.width / 8; ++k) {
-    //         let k8 = k * 8;
-    //         //  Pixel to bit position mapping
-    //         printData[++offset] =
-    //           getDarkPixel(k8 + 0, i) * 128 +
-    //           getDarkPixel(k8 + 1, i) * 64 +
-    //           getDarkPixel(k8 + 2, i) * 32 +
-    //           getDarkPixel(k8 + 3, i) * 16 +
-    //           getDarkPixel(k8 + 4, i) * 8 +
-    //           getDarkPixel(k8 + 5, i) * 4 +
-    //           getDarkPixel(k8 + 6, i) * 2 +
-    //           getDarkPixel(k8 + 7, i);
-    //       }
-    //     }
-    //     return printData;
-    //   }
-
-    //   function handleError(error) {
-    //     console.log(error);
-    //     // progress.hidden = true;
-    //     printCharacteristic = null;
-    //     // dialog.open();
-    //   }
-
-    //   function sendNextImageDataBatch(resolve, reject) {
-    //     // Can only write 512 bytes at a time to the characteristic
-    //     // Need to send the image data in 512 byte batches
-    //     if (index + 512 < data.length) {
-    //       printCharacteristic
-    //         .writeValue(data.slice(index, index + 512))
-    //         .then(() => {
-    //           index += 512;
-    //           sendNextImageDataBatch(resolve, reject);
-    //         })
-    //         .catch((error) => reject(error));
-    //     } else {
-    //       // Send the last bytes
-    //       if (index < data.length) {
-    //         printCharacteristic
-    //           .writeValue(data.slice(index, data.length))
-    //           .then(() => {
-    //             resolve();
-    //           })
-    //           .catch((error) => reject(error));
-    //       } else {
-    //         resolve();
-    //       }
-    //     }
-    //   }
-
-    //   function sendImageData() {
-    //     index = 0;
-    //     data = getImagePrintData();
-    //     return new Promise(function (resolve, reject) {
-    //       sendNextImageDataBatch(resolve, reject);
-    //     });
-    //   }
-
-    //   function sendTextData() {
-    //     // Get the bytes for the text
-    //     let encoder = new TextEncoder("utf-8");
-    //     // Add line feed + carriage return chars to text
-    //     let text = encoder.encode(message + "\u000A\u000D");
-    //     return printCharacteristic.writeValue(text).then(() => {
-    //       console.log("Write done.");
-    //     });
-    //   }
-
-    //   async function sendPrinterData() {
-    //     // Print an image followed by the text
-    //     await sendImageData()
-    //       .then(sendTextData)
-    //       .then(() => {
-    //         progress.hidden = true;
-    //       })
-    //       .catch(handleError);
-    //   }
-
-    //   if (printCharacteristic == null) {
-    //     navigator.bluetooth
-    //       .requestDevice({
-    //         filters: [
-    //           {
-    //             services: ["000018f0-0000-1000-8000-00805f9b34fb"]
-    //           }
-    //         ]
-    //       })
-    //       .then((device) => {
-    //         console.log("> Found " + device.name);
-    //         console.log("Connecting to GATT Server...");
-    //         return device.gatt.connect();
-    //       })
-    //       .then((server) =>
-    //         server.getPrimaryService("000018f0-0000-1000-8000-00805f9b34fb")
-    //       )
-    //       .then((service) =>
-    //         service.getCharacteristic("00002af1-0000-1000-8000-00805f9b34fb")
-    //       )
-    //       .then((characteristic) => {
-    //         // Cache the characteristic
-    //         printCharacteristic = characteristic;
-    //         sendPrinterData();
-    //       })
-    //       .catch(handleError);
-    //   } else {
-    //     sendPrinterData();
-    //   }
-    // },
     async printNota(printCharacteristic) {
       let message = this.message;
       let messageNote = this.messageNote;
@@ -743,9 +588,9 @@ export default {
           .requestDevice({
             filters: [
               {
-                services: ["000018f0-0000-1000-8000-00805f9b34fb"]
-              }
-            ]
+                services: ["000018f0-0000-1000-8000-00805f9b34fb"],
+              },
+            ],
           })
           .then((device) => {
             console.log("> Found " + device.name);
@@ -761,8 +606,9 @@ export default {
           .then((characteristic) => {
             //         // Cache the characteristic
             this.printCharacteristic = characteristic;
+
             console.log("Bluetoth berhasil konek");
-            //         // sendPrinterData();
+            sendPrinterData();
           })
           .catch(handleError);
       } else {
@@ -869,7 +715,7 @@ export default {
         beliProduk,
         totalBelanjaProduk,
         satuanProduk,
-        diskonProduk
+        diskonProduk,
       });
 
       const sum = this.keranjangBelanja.reduce((accumulator, object) => {
@@ -910,15 +756,15 @@ export default {
         this.newValue = this.newValue - 1;
         this.$emit("input", this.newValue);
       }
-    }
+    },
   },
   watch: {
     value: {
       handler: function (newVal, oldVal) {
         this.newValue = newVal;
-      }
-    }
-  }
+      },
+    },
+  },
   // created: function () {
   //   this.newValue = this.value;
   // }
