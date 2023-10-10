@@ -9,7 +9,7 @@
       <q-item-label
         style="font-size: 12px"
         class="text-caption text-grey-6 q-mb-md"
-        >Halaman utama data analitik Kabupaten Pesawaran.</q-item-label
+        >Halaman utama data analitik Akasia.</q-item-label
       >
     </div>
     <div class="row q-gutter-sm">
@@ -19,11 +19,11 @@
             <q-item-label
               caption
               class="text-indigo-10 text-weight-medium q-mb-xs text-capitalize"
-              >Total Keuntungan</q-item-label
+              >OMSET</q-item-label
             >
             <q-item-label
               class="text-h6 text-weight-bold text-indigo-10 counter-animation"
-              >{{ this.countPenduduk }}</q-item-label
+              >{{ $formatPrice(this.countData.omset) }}</q-item-label
             >
           </q-item-section>
           <q-item-section
@@ -50,11 +50,42 @@
             <q-item-label
               caption
               class="text-indigo-10 text-weight-medium q-mb-xs text-capitalize"
-              >Total Omset</q-item-label
+              >KEUNTUNGAN</q-item-label
             >
             <q-item-label
               class="text-h6 text-weight-bold text-indigo-10 counter-animation"
-              >{{ this.countPria }}</q-item-label
+              >{{ $formatPrice(this.countData.keuntungan) }}</q-item-label
+            >
+          </q-item-section>
+          <q-item-section
+            side
+            style="font-size: 12px"
+            class="text-weight-bold text-white"
+          >
+            <q-item-section>
+              <q-avatar
+                rounded
+                size="3em"
+                color="blue"
+                text-color="white"
+                icon="male"
+              />
+            </q-item-section>
+          </q-item-section>
+        </q-item>
+      </q-card>
+
+      <q-card class="my-card bg-blue-2 col" flat>
+        <q-item clickable v-ripple>
+          <q-item-section>
+            <q-item-label
+              caption
+              class="text-indigo-10 text-weight-medium q-mb-xs text-capitalize"
+              >MODAL</q-item-label
+            >
+            <q-item-label
+              class="text-h6 text-weight-bold text-indigo-10 counter-animation"
+              >{{ $formatPrice(this.countData.modal) }}</q-item-label
             >
           </q-item-section>
           <q-item-section
@@ -81,11 +112,11 @@
             <q-item-label
               caption
               class="text-indigo-10 text-weight-medium q-mb-xs text-capitalize"
-              >Total Produk</q-item-label
+              >PRODUK</q-item-label
             >
             <q-item-label
               class="text-h6 text-weight-bold text-indigo-10 counter-animation"
-              >{{ this.countWanita }}</q-item-label
+              >{{ this.countData.countProduk }}</q-item-label
             >
           </q-item-section>
           <q-item-section
@@ -112,11 +143,11 @@
             <q-item-label
               caption
               class="text-indigo-10 text-weight-medium q-mb-xs text-capitalize"
-              >Total Pegawai</q-item-label
+              >PEGAWAI</q-item-label
             >
             <q-item-label
               class="text-h6 text-weight-bold text-indigo-10 counter-animation"
-              >{{ this.countWanita }}</q-item-label
+              >{{ this.countData.countPegawai }}</q-item-label
             >
           </q-item-section>
           <q-item-section
@@ -143,11 +174,11 @@
             <q-item-label
               caption
               class="text-indigo-10 text-weight-medium q-mb-xs text-capitalize"
-              >Total Toko</q-item-label
+              >TOKO</q-item-label
             >
             <q-item-label
               class="text-h6 text-weight-bold text-indigo-10 counter-animation"
-              >{{ this.countWanita }}</q-item-label
+              >{{ this.countData.countWarung }}</q-item-label
             >
           </q-item-section>
           <q-item-section
@@ -167,120 +198,149 @@
           </q-item-section>
         </q-item>
       </q-card>
+    </div>
 
+    <div class="row q-gutter-md q-mt-xs">
+      <q-card class="q-pa-md col">
+        <q-item-label
+          style="font-size: 13px"
+          class="text-weight-medium text-indigo-10"
+          >Data Omset Perbulan</q-item-label
+        >
+        <q-item-label
+          style="font-size: 11px"
+          class="text-caption text-grey-6 q-mb-md"
+          >Data Omset seluruh transaksi perbulan.</q-item-label
+        >
+        <div id="chart" class="col">
+          <ChartsTransaksi
+            v-if="!loading"
+            :label="arrayMonth"
+            :value="arrayOmset"
+            :year = "omsetYear"
+          />
+        </div>
+      </q-card>
 
+      <!-- <q-card class="q-pa-md q-mt-md col">
+        <q-item-label
+          style="font-size: 13px"
+          class="text-weight-medium text-indigo-10"
+          >Data Bantuan</q-item-label
+        >
+        <q-item-label
+          style="font-size: 11px"
+          class="text-caption text-grey-6 q-mb-md"
+          >Sebaran data bantuan yang diterima penduduk Kabupaten
+          Pesawaran.</q-item-label
+        >
+        <div id="chart" class="col">
+          <ChartsBarBantuan
+            v-if="!loadingBantuan"
+            :label="bantuan"
+            :jumlahBantuan="jumlahBantuan"
+          />
+        </div>
+      </q-card> -->
     </div>
   </q-page>
 </template>
 
 <script>
+import ChartsTransaksi from "./../../components/MyCharts/ChartTransaksi.vue";
+import {
+  Chart as ChartJS,
+  Title,
+  Tooltip,
+  Legend,
+  BarElement,
+  CategoryScale,
+  LinearScale,
+} from "chart.js";
+
+ChartJS.register(
+  CategoryScale,
+  LinearScale,
+  BarElement,
+  Title,
+  Tooltip,
+  Legend
+);
+const countAllModel = () => {
+  return {
+    modal: 0,
+    omset: 0,
+    keuntungan: 0,
+    countProduk: 0,
+    countPegawai: 0,
+    countWarung: 0,
+  };
+};
 export default {
   name: "IndexPage",
-  components: {},
+  components: {
+    ChartsTransaksi,
+  },
   data() {
     return {
-      
+      countData: countAllModel(),
+      arrayMonth: [
+        "January",
+        "February",
+        "Maret",
+        "April",
+        "Mei",
+        "Juni",
+        "Juli",
+        "Agustus",
+        "September",
+        "Oktober",
+        "November",
+        "Desember",
+      ],
+      arrayOmset: [0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0],
+      omsetYear : null ,
+      loading: true,
     };
   },
-  created() {
-
+  mounted() {
+    this.getCount();
+    this.renderChartPenyakit();
   },
   methods: {
-    getTiket: async function () {
+    getCount: async function () {
       this.$q.loading.show();
       await this.$axios
-        .get(`tiket`)
+        .get(`dashboard`)
         .finally(() => this.$q.loading.hide())
         .then((response) => {
           if (!this.$parseResponse(response.data)) {
-            this.rows = response.data.data;
+            this.countData = response.data.data;
+            // console.log(response.data);
           }
         })
         .catch(() => this.$commonErrorNotif());
     },
-    getCountTiket: async function () {
-      this.$q.loading.show();
+    renderChartPenyakit: async function () {
+      console.log("ksini");
       await this.$axios
-        .get(`tiket/get/count`)
-        .finally(() => this.$q.loading.hide())
-        .then((response) => {
-          if (!this.$parseResponse(response.data)) {
-            this.countTiket = response.data.data;
+        .get(`dashboard/getCountOmsetByMounth`)
+        .then((res) => {
+          console.log(res);
+          if (!this.$parseResponse(res.data)) {
+            res.data.data.forEach((datax) => {
+              // this.arrayMonth.push(datax._id.month);
+              // const index = items.findIndex((x) => x === datax._id.month);
+              this.arrayOmset[datax._id.month - 1] = datax.total;
+              // this.arrayOmset.push(datax.total);
+            });
+            this.omsetYear = res.data.data[0]._id.year
+            this.loading = false;
           }
-        })
-        .catch(() => this.$commonErrorNotif());
-    },
-    onSubmit() {
-      this.onCreate();
-    },
-    resetField() {
-      this.form = model();
-    },
-    async onCreate() {
-      this.$q.loading.show();
-      await this.$axios
-        .post("tiket/create", this.form)
-        .finally(() => this.$q.loading.hide())
-        .then((response) => {
-          if (!this.$parseResponse(response.data)) {
-            this.$successNotif(response.data.message, "positive");
-            this.resetField();
-            this.getTiket();
-          }
-        })
-        .catch((err) => {
-          console.log(err.response.data);
-          this.$commonErrorNotif();
-        });
-    },
-    onAddData() {
-      this.addDialog = true;
-      this.resetField();
-    },
 
-    onEdit() {
-      this.onUpdate();
-    },
-    editData(DATA) {
-      this.editDialog = true;
-      this.form.id = DATA.id;
-      this.form.label = DATA.label;
-      this.form.diskon = DATA.diskon;
-      this.form.harga = DATA.harga;
-      this.form.expiredDiskon = format(
-        new Date(DATA.expiredDiskon),
-        "yyyy-MM-dd"
-      );
-    },
-    onUpdate() {
-      this.$q.loading.show();
-      this.$axios
-        .put(`tiket/update/${this.form.id}`, this.form)
-        .finally(() => this.$q.loading.hide())
-        .then((response) => {
-          if (!this.$parseResponse(response.data)) {
-            this.editDialog = false;
-            this.getTiket();
-          }
         })
-        .catch(() => this.$commonErrorNotif());
+        .catch((err) => console.log(err));
     },
-    delete(DATA) {
-      this.deleteDialog = true;
-      this.id = DATA.id;
-    },
-    deleteData() {
-      this.$q.loading.show();
-      this.$axios
-        .delete(`tiket/${this.id}`)
-        .finally(() => this.$q.loading.hide())
-        .then((response) => {
-          if (!this.$parseResponse(response.data)) {
-            this.getTiket();
-          }
-        })
-        .catch(() => this.$commonErrorNotif());
-    }
-  }
+  },
 };
 </script>
