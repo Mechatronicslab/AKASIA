@@ -130,8 +130,8 @@
             ></q-img>
           </div>
           <hr />
-          <q-input v-model="message" ></q-input>
-          <q-input v-model="messageNote" ></q-input>
+          <q-input v-model="message"></q-input>
+          <q-input v-model="messageNote"></q-input>
           <q-btn flat class="q-mr-sm" v-model="print" @click="this.btConnect()"
             >Checkouts</q-btn
           >
@@ -352,6 +352,39 @@
           </div>
         </q-card>
       </q-dialog>
+
+      <div>
+        <div class="header">
+          <H1>Nama Toko</H1>
+          <p>Pringsewu</p>
+        </div>
+        <hr />
+        <div class="content">
+          <p>Nota: #123</p>
+          <p>Tanggal: 09/10/2023</p>
+          <hr />
+          <table>
+            <tr>
+              <th>Barang</th>
+              <th>Harga</th>
+              <th>Jumlah</th>
+            </tr>
+            <tr>
+              <td>Produk 1</td>
+              <td>Rp. 10.000</td>
+              <td>Produk 1</td>
+            </tr>
+          </table>
+          <hr />
+          <p>Total Harga : 10.000</p>
+          <p>Diskon : 0</p>
+          <p>Total Bayar : 10.000</p>
+        </div>
+        <hr />
+        <div class="footer">
+          <p>terimakasih sudah berbelanja di toko kami.</p>
+        </div>
+      </div>
     </div>
   </q-page>
 </template>
@@ -407,6 +440,7 @@ export default {
       printCharacteristic: null,
       GUID: null,
       dataUser: this.$q.localStorage.getItem("data"),
+      namaKasir: this.$q.localStorage.getItem("data").user.name,
       form: modelTransaksi(),
       harga: 0,
       dialogCheckout: model(),
@@ -437,8 +471,14 @@ export default {
       rows: [],
       print: null,
       image: PNGbackground,
-      message: "Lembah Akasia",
+      // printable: null,
+      // message: "Lembah Akasia",
       messageNote: "Nota Belanja Barang",
+      belanjaan: [
+        { nama: "Barang 1", harga: 10.0 },
+        { nama: "Barang 2", harga: 20.0 }
+      ],
+      total: 30.0
     };
   },
   created() {
@@ -608,8 +648,23 @@ export default {
     //   }
     // },
     async printNota(printCharacteristic) {
-      let message = this.message;
-      let messageNote = this.messageNote;
+      const message = `
+      LEMBAH AKASIA
+      Telepon : 0878-1862-2563
+      ===========================
+      Nota : 092JX@89
+      Kasir : ${this.namaKasir.padEnd(2)}
+      Tgl : 09/10/2023
+
+      Nama Barang        Harga
+      ===========================
+      ${this.belanjaan
+        .map((item) => `${item.nama.padEnd(16)} $${item.harga.toFixed(2)}`)
+        .join("\n")}
+      ---------------------------
+      Total              $${this.total.toFixed(2)}
+      Terima kasih telah belanja di toko kami!
+    `;
 
       let index = 0;
       let data;
@@ -699,7 +754,7 @@ export default {
         //     // Get the bytes for the text
         let encoder = new TextEncoder("utf-8");
         //     // Add line feed + carriage return chars to text
-        let text = encoder.encode(message + messageNote);
+        let text = encoder.encode(message);
         return printCharacteristic.writeValue(text).then(() => {
           console.log("Write done.");
         });

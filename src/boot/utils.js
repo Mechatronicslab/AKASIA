@@ -34,7 +34,8 @@ const parseDate = (date) => {
     const full = tgl + ' ' + listMonth[month - 1] + ' ' + year
     respon = {
       day: [tgl < 10 ? 0 + '' + tgl : tgl].join('/'),
-      date: [year, month < 10 ? 0 + '' + (month) : (month), tgl < 10 ? 0 + '' + tgl : tgl].join('/') + '_' + newDate.getHours() + ':' + newDate.getMinutes() + ':' + newDate.getSeconds(),
+      date: [year, month < 10 ? 0 + '' + (month) : (month), tgl < 10 ? 0 + '' + tgl : tgl].join('/') + ' ' + newDate.getHours() + ':' + newDate.getMinutes() + ':' + newDate.getSeconds(),
+      dates: [tgl < 10 ? 0 + '' + tgl : tgl, month < 10 ? 0 + '' + (month) : (month), year].join('/') + ' ' + newDate.getHours() + ':' + newDate.getMinutes() + ':' + newDate.getSeconds(),
       dateLocal: [year, month < 10 ? 0 + '' + (month) : (month), tgl < 10 ? 0 + '' + tgl : tgl].join('/'),
       fullDate: full,
       timeStap: `${full} ${newDate.getHours()}:${newDate.getMinutes()}:${newDate.getSeconds()}`,
