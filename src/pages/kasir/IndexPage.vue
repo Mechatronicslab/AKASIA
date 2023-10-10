@@ -392,16 +392,16 @@ export default {
   props: {
     value: {
       default: 1,
-      type: Number
+      type: Number,
     },
     min: {
       default: 1,
-      type: Number
+      type: Number,
     },
     max: {
       default: undefined,
-      type: Number
-    }
+      type: Number,
+    },
   },
   data() {
     return {
@@ -432,13 +432,13 @@ export default {
           align: "center",
           label: "data",
           field: "data",
-          sortable: true
-        }
+          sortable: true,
+        },
       ],
       pagination: {
         page: 1,
         rowsPerPage: 50,
-        rowsNumber: 50
+        rowsNumber: 50,
       },
       rows: [],
       print: null,
@@ -457,7 +457,7 @@ export default {
     async getData() {
       this.onRequest({
         pagination: this.pagination,
-        filter: this.filter
+        filter: this.filter,
       });
     },
     onRequest(props) {
