@@ -479,7 +479,7 @@ export default {
       this.form.total = this.totalBelanja;
 
       for (let index = 0; index < this.keranjangBelanja.length; index++) {
-        this.keranjangBelanja[index].idTransaksi = this.kodeTransaksi;
+        this.keranjangBelanja[index].idTiket = this.kodeTransaksi;
       }
 
       this.form.detailPesanan = this.keranjangBelanja;
@@ -505,7 +505,7 @@ Nama             Harga
 ${this.keranjangBelanja
   .map(
     (item) =>
-      `${item.namaItem.padEnd(16)} Rp. ${this.$formatPrice(item.hargaDiskon)}`
+      `${item.jenisTiket.padEnd(16)} Rp. ${this.$formatPrice(item.hargaDiskon)}`
   )
   .join("\n")}
 --------------------------------
@@ -527,7 +527,7 @@ Terima kasih, datang kembali!
       this.dialogCheckout = DATA;
     },
     onCheckout() {
-      var namaItem = this.dialogCheckout.label;
+      var jenisTiket = this.dialogCheckout.label;
       var harga = this.dialogCheckout.harga;
       var beliItem = this.newValue;
       var diskon = this.dialogCheckout.diskon;
@@ -544,7 +544,7 @@ Terima kasih, datang kembali!
       var totalBelanjaItem = this.newValue * hargaDiskon;
 
       this.keranjangBelanja.push({
-        namaItem,
+        jenisTiket,
         hargaDiskon,
         beliItem,
         totalBelanjaItem,
