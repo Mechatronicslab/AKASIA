@@ -217,31 +217,33 @@
             v-if="!loading"
             :label="arrayMonth"
             :value="arrayOmset"
-            :year = "omsetYear"
+            :year="year"
+            :title="`Omset`"
           />
         </div>
       </q-card>
 
-      <!-- <q-card class="q-pa-md q-mt-md col">
+      <q-card class="q-pa-md col">
         <q-item-label
           style="font-size: 13px"
           class="text-weight-medium text-indigo-10"
-          >Data Bantuan</q-item-label
+          >Data Keuntungan Perbulan</q-item-label
         >
         <q-item-label
           style="font-size: 11px"
           class="text-caption text-grey-6 q-mb-md"
-          >Sebaran data bantuan yang diterima penduduk Kabupaten
-          Pesawaran.</q-item-label
+          >Data Keuntungan seluruh transaksi perbulan.</q-item-label
         >
         <div id="chart" class="col">
-          <ChartsBarBantuan
-            v-if="!loadingBantuan"
-            :label="bantuan"
-            :jumlahBantuan="jumlahBantuan"
+          <ChartsTransaksi
+            v-if="!loading"
+            :label="arrayMonth"
+            :value="arrayKeuntungan"
+            :year="year"
+            :title="`Keuntungan`"
           />
         </div>
-      </q-card> -->
+      </q-card>
     </div>
   </q-page>
 </template>
@@ -255,7 +257,7 @@ import {
   Legend,
   BarElement,
   CategoryScale,
-  LinearScale,
+  LinearScale
 } from "chart.js";
 
 ChartJS.register(
@@ -273,13 +275,13 @@ const countAllModel = () => {
     keuntungan: 0,
     countProduk: 0,
     countPegawai: 0,
-    countWarung: 0,
+    countWarung: 0
   };
 };
 export default {
   name: "IndexPage",
   components: {
-    ChartsTransaksi,
+    ChartsTransaksi
   },
   data() {
     return {
@@ -296,16 +298,17 @@ export default {
         "September",
         "Oktober",
         "November",
-        "Desember",
+        "Desember"
       ],
       arrayOmset: [0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0],
-      omsetYear : null ,
-      loading: true,
+      arrayKeuntungan: [0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0],
+      year: null,
+      loading: true
     };
   },
   mounted() {
     this.getCount();
-    this.renderChartPenyakit();
+    this.renderChartOmset();
   },
   methods: {
     getCount: async function () {
@@ -321,26 +324,26 @@ export default {
         })
         .catch(() => this.$commonErrorNotif());
     },
-    renderChartPenyakit: async function () {
+    renderChartOmset: async function () {
       console.log("ksini");
       await this.$axios
-        .get(`dashboard/getCountOmsetByMounth`)
+        .get(`dashboard/getCountTransaksiByMounth`)
         .then((res) => {
           console.log(res);
           if (!this.$parseResponse(res.data)) {
             res.data.data.forEach((datax) => {
               // this.arrayMonth.push(datax._id.month);
               // const index = items.findIndex((x) => x === datax._id.month);
-              this.arrayOmset[datax._id.month - 1] = datax.total;
+              this.arrayOmset[datax._id.month - 1] = datax.omset;
+              this.arrayKeuntungan[datax._id.month - 1] = datax.keuntungan;
               // this.arrayOmset.push(datax.total);
             });
-            this.omsetYear = res.data.data[0]._id.year
+            this.year = res.data.data[0]._id.year;
             this.loading = false;
           }
-
         })
         .catch((err) => console.log(err));
-    },
-  },
+    }
+  }
 };
 </script>

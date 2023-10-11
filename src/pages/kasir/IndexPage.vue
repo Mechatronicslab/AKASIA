@@ -117,7 +117,7 @@
                 size="sm"
                 color="blue-10"
                 flat
-                @click="this.hapusData(d.namaProduk)"
+                @click="this.hapusData(i)"
               ></q-btn>
             </q-item>
           </q-list>
@@ -532,7 +532,12 @@ Tgl   : ${dateBuy}
 
 Nama Barang      Harga
 ================================
-${this.keranjangBelanja.map((item) =>`${item.namaProduk.padEnd(16)} ${this.$formatPrice(item.hargaDiskon)}`).join("\n")}
+${this.keranjangBelanja
+  .map(
+    (item) =>
+      `${item.namaProduk.padEnd(16)} ${this.$formatPrice(item.hargaDiskon)}`
+  )
+  .join("\n")}
 --------------------------------
 Total              ${totalBelanja}
 Dibayarkan         ${uangMasuk}
@@ -571,7 +576,6 @@ Terima kasih, datang kembali!
       this.dialogCheckout.satuan = DATA.satuan;
       this.dialogCheckout.keterangan = DATA.keterangan;
       this.dialogCheckout.diskon = DATA.diskon;
-      this.dialogCheckout = DATA;
     },
     onCheckout() {
       var namaProduk = this.dialogCheckout.nama;
@@ -585,8 +589,6 @@ Terima kasih, datang kembali!
         adaDiskon = 1;
       }
       var jumlahBeli = this.newValue;
-
-      console.log(this.dialogCheckout);
 
       // dataBarang.harga = dataBarang.harga;
       var hargaDiskon =
@@ -615,15 +617,18 @@ Terima kasih, datang kembali!
 
       this.dialog = false;
       this.newValue = 1;
+      console.log(this.rows);
     },
     hapusData(DATA) {
-      this.nama = DATA;
+      console.log(DATA);
+      this.id = DATA;
 
-      const updateKeranjang = this.keranjangBelanja.filter(
-        (Object) => Object.namaProduk !== this.nama
-      );
+      // const updateKeranjang = this.keranjangBelanja.filter(
+      //   (Object) => Object.namaProduk !== this.nama
+      // );
+      this.keranjangBelanja.splice(this.id, 1);
 
-      this.keranjangBelanja = updateKeranjang;
+      // this.keranjangBelanja = updateKeranjang;
 
       const sum = this.keranjangBelanja.reduce((accumulator, object) => {
         return accumulator + object.totalBelanjaProduk;
