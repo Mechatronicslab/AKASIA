@@ -7,25 +7,25 @@ import { Bar } from "vue-chartjs";
 
 export default {
   components: {
-    Bar
+    Bar,
   },
   props: {
     label: {
       type: Array,
-      default: null
+      default: null,
     },
     value: {
       type: Array,
-      default: null
+      default: null,
     },
     year: {
       type: String,
-      default: null
+      default: null,
     },
     title: {
       type: String,
-      default: null
-    }
+      default: null,
+    },
   },
   data() {
     return {
@@ -38,11 +38,11 @@ export default {
             borderRadius: 6,
             data: this.value,
             maxBarThickness: 100,
-            minBarLength: 10
-          }
-        ]
-      }
+            minBarLength: 10,
+          },
+        ],
+      },
     };
-  }
+  },
 };
 </script>
