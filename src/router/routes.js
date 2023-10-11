@@ -32,12 +32,17 @@ const routes = [
       {
         path: "produk",
         name: "produk",
-        component: () => import("pages/admin/ProdukPage.vue"),
+        component: () => import("src/pages/admin/produk/ProdukPage.vue"),
       },
       {
-        path: "add-produk",
+        path: "add",
         name: "produk_add",
-        component: () => import("pages/admin/ProdukAddPage.vue"),
+        component: () => import("src/pages/admin/produk/ProdukAddPage.vue"),
+      },
+      {
+        path: "categories",
+        name: "produk_categories",
+        component: () => import("src/pages/admin/produk/ProdukCategoriesAddPage.vue"),
       },
       {
         path: "satuan",

@@ -49,7 +49,9 @@
                   >
                 </q-card>
                 <q-card class="q-mt-sm q-pa-sm" style="width: 139px">
-                  <div class="text-caption ellipsis text-capitalize text-weight-bold">
+                  <div
+                    class="text-caption ellipsis text-capitalize text-weight-bold"
+                  >
                     {{ props.row.label }}
                   </div>
                   <div class="text-caption ellipsis text-grey-6">
@@ -90,9 +92,7 @@
                   $formatPrice(d.hargaDiskon)
                 }}</q-item-label>
               </q-item-section>
-              <q-item-section
-                >x {{ d.beliItem }}</q-item-section
-              >
+              <q-item-section>x {{ d.beliItem }}</q-item-section>
               <q-item-section>{{
                 $formatPrice(d.totalBelanjaItem)
               }}</q-item-section>
@@ -343,20 +343,29 @@
 import PNGbackground from "../../../public/images/icons/logosx.png";
 const model = () => {
   return {
-    nama: null,
-    harga: null,
-    stok: null,
-    satuan: null,
+    kode: null,
+    isParkir: null,
+    nomorPolisi: null,
+    jenisKendaraan: null,
+    hargaParkir: null,
     deskripsi: null,
-    diskon: null,
-    modal: 0,
-    jumlahBeli: 0,
-    adaDiskon: 0
+    totalBayar: null,
+    adaDiskon: 0,
+    detailPesanan: []
   };
 };
 
 const modelTransaksi = () => {
-  return { user: null, idWarung: null, kode: null, total: null, barang: [] };
+  return {
+    kode: null,
+    isParkir: null,
+    nomorPolisi: null,
+    jenisKendaraan: null,
+    hargaParkir: null,
+    totalBayar: null,
+    idWarung: null,
+    barang: []
+  };
 };
 
 export default {
@@ -365,16 +374,16 @@ export default {
   props: {
     value: {
       default: 1,
-      type: Number,
+      type: Number
     },
     min: {
       default: 1,
-      type: Number,
+      type: Number
     },
     max: {
       default: undefined,
-      type: Number,
-    },
+      type: Number
+    }
   },
   data() {
     return {
@@ -405,13 +414,13 @@ export default {
           align: "center",
           label: "data",
           field: "data",
-          sortable: true,
-        },
+          sortable: true
+        }
       ],
       pagination: {
         page: 1,
         rowsPerPage: 50,
-        rowsNumber: 50,
+        rowsNumber: 50
       },
       rows: [],
       print: null,
@@ -435,11 +444,6 @@ export default {
         .then((response) => {
           if (!this.$parseResponse(response.data)) {
             this.rows = response.data.data;
-            console.log(response.data.data)
-            // this.pagination.rowsPerPage = Number(response.data.resPerPage);
-            // this.pagination.page = Number(response.data.page);
-            // this.pagination.rowsNumber = Number(response.data.countData);
-            // this.loading = false;
           }
         })
         .catch(() => this.$commonErrorNotif());
@@ -453,14 +457,14 @@ export default {
       this.kodeTransaksi = "TRX-" + this.generateRandomId(5);
 
       const sum = this.keranjangBelanja.reduce((accumulator, object) => {
-        return accumulator + object.totalBelanjaProduk;
+        return accumulator + object.totalBelanjaItem;
       }, 0);
 
       this.totalBelanja = sum;
     },
     countMoney: async function (params) {
       const sum = this.keranjangBelanja.reduce((accumulator, object) => {
-        return accumulator + object.totalBelanjaProduk;
+        return accumulator + object.totalBelanjaItem;
       }, 0);
 
       this.totalBelanja = sum;
@@ -469,17 +473,16 @@ export default {
       this.uangMasuk = params;
     },
     async onBuy() {
-      // this.$q.loading.show();
       this.form.user = this.dataUser.user.GUID;
       this.form.idWarung = this.dataUser.user.idWarung;
       this.form.kode = this.kodeTransaksi;
       this.form.total = this.totalBelanja;
+
       for (let index = 0; index < this.keranjangBelanja.length; index++) {
         this.keranjangBelanja[index].idTransaksi = this.kodeTransaksi;
       }
-      // console.log(this.keranjangBelanja);
 
-      this.form.barang = this.keranjangBelanja;
+      this.form.detailPesanan = this.keranjangBelanja;
 
       let nomorNota = this.kodeTransaksi.padEnd(2);
       let namaKasir = this.dataUser.user.name.padEnd(2);
@@ -494,40 +497,26 @@ Sukoharjo I, Pringsewu
 Telepon : 0878-1862-2563
 ================================
 Nota : ${nomorNota}
-Kasir : ${namaKasir}
+Petugas : ${namaKasir}
 Tgl : ${dateBuy}
 
-Nama Barang      Harga
+Nama             Harga
 ================================
-${this.keranjangBelanja.map((item) =>`${item.namaProduk.padEnd(16)} Rp. ${this.$formatPrice(item.hargaDiskon)}`).join("\n")}
+${this.keranjangBelanja
+  .map(
+    (item) =>
+      `${item.namaItem.padEnd(16)} Rp. ${this.$formatPrice(item.hargaDiskon)}`
+  )
+  .join("\n")}
 --------------------------------
 Total              ${totalBelanja}
 Dibayarkan         ${uangMasuk}
 Kembalian          ${kembalian}
 
-Terima, datang kembali!
+Terima kasih, datang kembali!
 `;
 
       await this.btConnect();
-      // console.log(this.printStatus);
-      // if (this.printStatus) {
-      //   await this.$axios
-      //     .post("transaksi/create", this.form)
-      //     .finally(() => this.$q.loading.hide())
-      //     .then((response) => {
-      //       if (!this.$parseResponse(response.data)) {
-      //         this.$successNotif(response.data.message, "positive");
-      //         this.keranjangBelanja = [];
-      //         this.totalBelanja = 0;
-      //         this.harga = 0;
-      //         this.dialogBayar = false;
-      //       }
-      //     })
-      //     .catch((err) => {
-      //       console.log(err.response.data);
-      //       // this.$commonErrorNotif();
-      //     });
-      // }
     },
     checkout(DATA) {
       this.dialog = true;
@@ -543,6 +532,7 @@ Terima, datang kembali!
       var beliItem = this.newValue;
       var diskon = this.dialogCheckout.diskon;
       var adaDiskon = 0;
+
       if (diskon > 0) {
         adaDiskon = 1;
       }
@@ -604,8 +594,10 @@ Terima, datang kembali!
       }
     },
     insertData() {
+      this.form.totalBayar = this.totalBelanja;
+      this.form.detailPesanan = this.keranjangBelanja;
       this.$axios
-        .post("transaksi/create", this.form)
+        .post("transaksitiket/create", this.form)
         .finally(() => this.$q.loading.hide())
         .then((response) => {
           if (!this.$parseResponse(response.data)) {
@@ -618,141 +610,13 @@ Terima, datang kembali!
         })
         .catch((err) => {
           console.log(err.response.data);
-          // this.$commonErrorNotif();
         });
     },
 
     async printNota(printCharacteristic) {
-      // let namaKasir = this.dataUser.user.name;
-      // console.log(this.keranjangBelanja)
-      //   const message = `
-      //   LEMBAH AKASIA
-      //   Telepon : 0878-1862-2563
-      //   ===========================
-      //   Nota : 092JX@89
-      //   Kasir : Juli Suprapto
-      //   Tgl : 09/10/2023
-
-      //   Nama Barang        Harga
-      //   ===========================
-      //   ${this.belanjaan
-      //     .map((item) => `${item.nama.padEnd(16)} $${item.harga.toFixed(2)}`)
-      //     .join("\n")}
-      //   ---------------------------
-      //   Total              $${this.total.toFixed(2)}
-      //   Terima kasih telah belanja di toko kami!
-      // `;
-      // const message = `
-      //   LEMBAH AKASIA
-      //   Sukoharjo I, Pringsewu
-      //   Telepon : 0878-1862-2563
-      //   ===========================
-      //   Kasir : ${namaKasir}
-      //   Tgl :
-
-      //   Nama Barang        Harga
-      //   ===========================
-      //   ${this.keranjangBelanja
-      //     .map((item) => `${item.namaProduk.padEnd(2)} $${item.hargaDiskon.toFixed(2)}`)
-      //     .join("\n")}
-      //   ---------------------------
-      //   Total              Rp. ${this.totalBelanja.toFixed(2)}
-      //   Diskon                 ${this.diskon.toFixed(2)} %
-      //   Dibayarkan         Rp. ${this.harga.toFixed(2)}
-      //   Kembalian          Rp. ${this.pembayaran.toFixed(2)}
-      //   Terima kasih telah belanja di toko kami!
-      // `;
       let message = this.message;
-      // let messageNote = this.messageNote;
-
-      // let index = 0;
-      // let data;
-      // let imageData = this.imageData;
-      // let canvas = this.canvas;
-
-      // function getDarkPixel(x, y) {
-      //   //     // Return the pixels that will be printed black
-      //   let red = imageData[(canvas.width * y + x) * 4];
-      //   let green = imageData[(canvas.width * y + x) * 4 + 1];
-      //   let blue = imageData[(canvas.width * y + x) * 4 + 2];
-      //   return red + green + blue > 0 ? 1 : 0;
-      // }
-
-      // function getImagePrintData() {
-      //   if (imageData == null) {
-      //     console.log("No image to print!");
-      //     return new Uint8Array([]);
-      //   }
-      //   //     // Each 8 pixels in a row is represented by a byte
-      //   let printData = new Uint8Array((canvas.width / 8) * canvas.height + 8);
-      //   let offset = 0;
-      //   //     // Set the header bytes for printing the image
-      //   printData[0] = 29; // Print raster bitmap
-      //   printData[1] = 118; // Print raster bitmap
-      //   printData[2] = 48; // Print raster bitmap
-      //   printData[3] = 0; // Normal 203.2 DPI
-      //   printData[4] = canvas.width / 8; // Number of horizontal data bits (LSB)
-      //   printData[5] = 0; // Number of horizontal data bits (MSB)
-      //   printData[6] = canvas.height % 256; // Number of vertical data bits (LSB)
-      //   printData[7] = canvas.height / 256; // Number of vertical data bits (MSB)
-      //   offset = 7;
-      //   //     // Loop through image rows in bytes
-      //   for (let i = 0; i < canvas.height; ++i) {
-      //     for (let k = 0; k < canvas.width / 8; ++k) {
-      //       let k8 = k * 8;
-      //       //         //  Pixel to bit position mapping
-      //       printData[++offset] =
-      //         getDarkPixel(k8 + 0, i) * 128 +
-      //         getDarkPixel(k8 + 1, i) * 64 +
-      //         getDarkPixel(k8 + 2, i) * 32 +
-      //         getDarkPixel(k8 + 3, i) * 16 +
-      //         getDarkPixel(k8 + 4, i) * 8 +
-      //         getDarkPixel(k8 + 5, i) * 4 +
-      //         getDarkPixel(k8 + 6, i) * 2 +
-      //         getDarkPixel(k8 + 7, i);
-      //     }
-      //   }
-      //   return printData;
-      // }
-
-      // function sendNextImageDataBatch(resolve, reject) {
-      //   //     // Can only write 512 bytes at a time to the characteristic
-      //   //     // Need to send the image data in 512 byte batches
-      //   if (index + 512 < data.length) {
-      //     printCharacteristic
-      //       .writeValue(data.slice(index, index + 512))
-      //       .then(() => {
-      //         index += 512;
-      //         sendNextImageDataBatch(resolve, reject);
-      //       })
-      //       .catch((error) => reject(error));
-      //   } else {
-      //     //       // Send the last bytes
-      //     if (index < data.length) {
-      //       printCharacteristic
-      //         .writeValue(data.slice(index, data.length))
-      //         .then(() => {
-      //           resolve();
-      //         })
-      //         .catch((error) => reject(error));
-      //     } else {
-      //       resolve();
-      //     }
-      //   }
-      // }
-
-      // async function sendImageData() {
-      //   index = 0;
-      //   data = await getImagePrintData();
-      //   return new Promise(async function (resolve, reject) {
-      //     await sendNextImageDataBatch(resolve, reject);
-      //   });
-      // }
-
       function sendTextData() {
-        //     // Get the bytes for the text
         let encoder = new TextEncoder("utf-8");
-        //     // Add line feed + carriage return chars to text
         let text = encoder.encode(message);
         return printCharacteristic.writeValue(text).then(() => {
           console.log("Write done.");
@@ -760,7 +624,6 @@ Terima, datang kembali!
       }
 
       async function sendPrinterData() {
-        //     // Print an image followed by the text
         await sendTextData()
           .then(() => {
             progress.hidden = true;
@@ -770,27 +633,13 @@ Terima, datang kembali!
 
       function handleError(error) {
         console.log(error);
-        //     // progress.hidden = true;
         printCharacteristic = null;
-        //     // dialog.open();
       }
       await sendPrinterData();
+      await this.insertData();
     },
     btConnect: async function () {
       this.canvas = document.createElement("canvas");
-
-      // this.canvas.width = 220;
-      // this.canvas.height = 120;
-      // let context = this.canvas.getContext("2d");
-      // var imgnya = new Image();
-      // imgnya.src = PNGbackground;
-      // context.drawImage(imgnya, 0, 0, this.canvas.width, this.canvas.height);
-      // this.imageData = context.getImageData(
-      //   0,
-      //   0,
-      //   this.canvas.width,
-      //   this.canvas.height
-      // ).data;
       if (this.printCharacteristic == null) {
         navigator.bluetooth
           .requestDevice({
@@ -812,11 +661,8 @@ Terima, datang kembali!
             service.getCharacteristic("00002af1-0000-1000-8000-00805f9b34fb")
           )
           .then((characteristic) => {
-            //         // Cache the characteristic
             this.printCharacteristic = characteristic;
             console.log("Bluetoth berhasil konek");
-            // sendPrinterData();
-            // this.printNota(characteristic);
           })
           .catch(handleError);
       } else {
@@ -825,9 +671,7 @@ Terima, datang kembali!
 
       function handleError(error) {
         console.log(error);
-        //     // progress.hidden = true;
         printCharacteristic = null;
-        //     // dialog.open();
       }
     }
   },

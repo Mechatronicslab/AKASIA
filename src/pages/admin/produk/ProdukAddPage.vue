@@ -184,7 +184,7 @@ const model = () => {
   };
 };
 
-import { ListService } from "../../helper/ListService";
+import { ListService } from "../../../helper/ListService";
 
 export default {
   name: "IndexPage",

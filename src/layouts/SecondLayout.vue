@@ -28,7 +28,7 @@
                     />
                   </q-item-section>
                   <q-item-section>
-                    <q-item-label>{{this.dataUser.user.name}}</q-item-label>
+                    <q-item-label>{{ this.dataUser.user.name }}</q-item-label>
                     <q-item-label caption>be admin</q-item-label>
                   </q-item-section>
                   <q-item-section side>
@@ -73,11 +73,13 @@
           </q-item-section>
 
           <q-item-section>
-            <q-item-label class="text-white">{{this.dataUser.user.name}}</q-item-label>
+            <q-item-label class="text-white">{{
+              this.dataUser.user.name
+            }}</q-item-label>
             <q-badge color="white" class="q-mt-xs">
-              <q-item-label caption class="text-blue-10"
-                >{{this.dataUser.user.email}}</q-item-label
-              >
+              <q-item-label caption class="text-blue-10">{{
+                this.dataUser.user.email
+              }}</q-item-label>
             </q-badge>
           </q-item-section>
         </q-item>
@@ -138,7 +140,7 @@
               <q-item-section avatar> </q-item-section>
               <q-item-section> Tiket </q-item-section>
             </q-item>
-            <q-separator />
+
             <q-item
               active-class="tab-active"
               class="navigation-item text-blue-10 text-weight-light bg-grey-3"
@@ -203,7 +205,7 @@
               <q-item-section avatar> </q-item-section>
               <q-item-section> Data Warung </q-item-section>
             </q-item>
-            <q-separator />
+
             <q-item
               active-class="tab-active"
               class="navigation-item text-blue-10 text-weight-light bg-grey-3"
@@ -243,7 +245,7 @@
               <q-item-section avatar> </q-item-section>
               <q-item-section> Data Pegawai </q-item-section>
             </q-item>
-            <q-separator />
+
             <q-item
               active-class="tab-active"
               class="navigation-item text-blue-10 text-weight-light bg-grey-3"
@@ -283,7 +285,7 @@
               <q-item-section avatar> </q-item-section>
               <q-item-section> Data Produk </q-item-section>
             </q-item>
-            <q-separator />
+
             <q-item
               active-class="tab-active"
               class="navigation-item text-blue-10 text-weight-light bg-grey-3"
@@ -295,27 +297,31 @@
               <q-item-section avatar> </q-item-section>
               <q-item-section> Tambah Produk </q-item-section>
             </q-item>
-          </q-expansion-item>
 
-          <q-item
-            active-class="tab-active"
-            exact
-            class="navigation-item text-grey-6 text-weight-medium"
-            clickable
-            :to="{ name: 'satuan' }"
-            v-ripple
-          >
-            <q-item-section avatar>
-              <q-avatar
-                rounded
-                size="30px"
-                color="blue-10"
-                text-color="white"
-                icon="pin"
-              />
-            </q-item-section>
-            <q-item-section> Satuan Barang </q-item-section>
-          </q-item>
+            <q-item
+              active-class="tab-active"
+              class="navigation-item text-blue-10 text-weight-light bg-grey-3"
+              exact
+              clickable
+              :to="{ name: 'produk_categories' }"
+              v-ripple
+            >
+              <q-item-section avatar> </q-item-section>
+              <q-item-section> Kategori Produk </q-item-section>
+            </q-item>
+
+            <q-item
+              active-class="tab-active"
+              class="navigation-item text-blue-10 text-weight-light bg-grey-3"
+              exact
+              clickable
+              :to="{ name: 'satuan' }"
+              v-ripple
+            >
+              <q-item-section avatar> </q-item-section>
+              <q-item-section> Satuan Produk </q-item-section>
+            </q-item>
+          </q-expansion-item>
         </q-list>
       </q-card>
 
