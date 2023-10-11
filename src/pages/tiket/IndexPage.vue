@@ -39,7 +39,7 @@
             >
               <div class="col">
                 <q-card style="width: 139px" clickable v-ripple>
-                  <q-img src="images/icons/food.jpg" />
+                  <q-img src="images/icons/tiket.jpg" :ratio="1" />
                   <q-badge
                     floating
                     color="blue-10"
@@ -49,8 +49,8 @@
                   >
                 </q-card>
                 <q-card class="q-mt-sm q-pa-sm" style="width: 139px">
-                  <div class="text-caption ellipsis text-capitalize">
-                    {{ props.row.nama }}
+                  <div class="text-caption ellipsis text-capitalize text-weight-bold">
+                    {{ props.row.label }}
                   </div>
                   <div class="text-caption ellipsis text-grey-6">
                     {{ $formatPrice(props.row.harga) }}
@@ -65,12 +65,12 @@
         <q-card class="bg-grey-3 q-pa-sm q-px-md q-py-md" flat>
           <div class="col">
             <q-item-label style="font-size: 16px" class="text-weight-medium"
-              >Keranjang Belanja</q-item-label
+              >Daftar pesanan</q-item-label
             >
             <q-item-label
               style="font-size: 12px"
               class="text-caption text-grey-6 q-mb-md"
-              >Pesanan tamu dalam keranjang belanja.</q-item-label
+              >Pesanan tiket masuk tamu.</q-item-label
             >
           </div>
           <q-list separator>
@@ -82,7 +82,7 @@
               class="text-capitalize"
             >
               <q-item-section>
-                <q-item-label>{{ d.namaProduk }}</q-item-label>
+                <q-item-label>{{ d.namaItem }}</q-item-label>
                 <q-item-label caption v-if="d.diskon != 0"
                   ><q-badge>diskon {{ d.diskon }} %</q-badge></q-item-label
                 >
@@ -91,17 +91,17 @@
                 }}</q-item-label>
               </q-item-section>
               <q-item-section
-                >x {{ d.beliProduk }} {{ d.satuanProduk.nama }}</q-item-section
+                >x {{ d.beliItem }}</q-item-section
               >
               <q-item-section>{{
-                $formatPrice(d.totalBelanjaProduk)
+                $formatPrice(d.totalBelanjaItem)
               }}</q-item-section>
               <q-btn
                 icon="delete"
                 size="sm"
                 color="blue-10"
                 flat
-                @click="this.hapusData(d.namaProduk)"
+                @click="this.hapusData(d.namaItem)"
               ></q-btn>
             </q-item>
           </q-list>
@@ -145,8 +145,8 @@
       <q-dialog v-model="dialog" position="bottom">
         <q-card class="my-card">
           <q-bar class="bg-blue-10 text-white">
-            <q-icon name="restaurant_menu" />
-            <div>Daftar Menu</div>
+            <q-icon name="confirmation_number" />
+            <div>Daftar pesanan</div>
 
             <q-space />
 
@@ -161,7 +161,7 @@
                 <div class="row">
                   <div class="col-2">
                     <q-avatar rounded size="80px">
-                      <img src="images/icons/food.jpg" />
+                      <q-img src="images/icons/tiket.jpg" :ratio="1" />
                       <q-badge
                         floating
                         color="blue-10"
@@ -174,7 +174,7 @@
                     <q-item-label
                       style="font-size: 16px"
                       class="text-weight-medium text-indigo-10 q-mb-md text-capitalize"
-                      >{{ this.dialogCheckout.nama }}</q-item-label
+                      >{{ this.dialogCheckout.label }}</q-item-label
                     >
                     <q-item-label
                       style="font-size: 12px"
@@ -184,19 +184,8 @@
                         $formatPrice(this.dialogCheckout.harga)
                       }}</q-item-label
                     >
-                    <q-item-label
-                      style="font-size: 12px"
-                      class="text-caption text-grey-6 q-mb-md"
-                      >Stok - {{ this.dialogCheckout.stok }}
-                      {{ this.dialogCheckout.satuan.nama }}</q-item-label
-                    >
                   </div>
                 </div>
-                <q-item-label
-                  style="font-size: 12px"
-                  class="text-caption text-grey-6 q-mt-md"
-                  >{{ this.dialogCheckout.keterangan }}.</q-item-label
-                >
               </div>
             </div>
           </q-card-section>
@@ -543,20 +532,15 @@ Terima, datang kembali!
     checkout(DATA) {
       this.dialog = true;
       this.GUID = DATA.GUID;
-      this.dialogCheckout.nama = DATA.nama;
+      this.dialogCheckout.label = DATA.label;
       this.dialogCheckout.harga = DATA.harga;
-      this.dialogCheckout.stok = DATA.stok;
-      this.dialogCheckout.satuan = DATA.satuan;
-      this.dialogCheckout.keterangan = DATA.keterangan;
       this.dialogCheckout.diskon = DATA.diskon;
       this.dialogCheckout = DATA;
     },
     onCheckout() {
-      var namaProduk = this.dialogCheckout.nama;
+      var namaItem = this.dialogCheckout.label;
       var harga = this.dialogCheckout.harga;
-      var beliProduk = this.newValue;
-      var satuanProduk = this.dialogCheckout.satuan;
-      var modal = this.dialogCheckout.modal;
+      var beliItem = this.newValue;
       var diskon = this.dialogCheckout.diskon;
       var adaDiskon = 0;
       if (diskon > 0) {
@@ -564,29 +548,24 @@ Terima, datang kembali!
       }
       var jumlahBeli = this.newValue;
 
-      console.log(this.dialogCheckout);
-
-      // dataBarang.harga = dataBarang.harga;
       var hargaDiskon =
         this.dialogCheckout.harga -
         (this.dialogCheckout.harga * this.dialogCheckout.diskon) / 100;
-      var totalBelanjaProduk = this.newValue * hargaDiskon;
+      var totalBelanjaItem = this.newValue * hargaDiskon;
 
       this.keranjangBelanja.push({
-        namaProduk,
+        namaItem,
         hargaDiskon,
-        beliProduk,
-        totalBelanjaProduk,
-        satuanProduk,
+        beliItem,
+        totalBelanjaItem,
         harga,
         diskon,
         jumlahBeli,
-        modal,
         adaDiskon
       });
 
       const sum = this.keranjangBelanja.reduce((accumulator, object) => {
-        return accumulator + object.totalBelanjaProduk;
+        return accumulator + object.totalBelanjaItem;
       }, 0);
 
       this.totalBelanja = sum;
@@ -598,13 +577,13 @@ Terima, datang kembali!
       this.nama = DATA;
 
       const updateKeranjang = this.keranjangBelanja.filter(
-        (Object) => Object.namaProduk !== this.nama
+        (Object) => Object.namaItem !== this.nama
       );
 
       this.keranjangBelanja = updateKeranjang;
 
       const sum = this.keranjangBelanja.reduce((accumulator, object) => {
-        return accumulator + object.totalBelanjaProduk;
+        return accumulator + object.totalBelanjaItem;
       }, 0);
 
       this.totalBelanja = sum;

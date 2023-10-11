@@ -4,18 +4,17 @@
       <q-item-label
         style="font-size: 16px"
         class="text-weight-medium text-indigo-10"
-        >Main Warung</q-item-label
+        >Warung</q-item-label
       >
       <q-item-label
         style="font-size: 12px"
         class="text-caption text-grey-6 q-mb-md"
-        >Halaman visualiasi data warung yang terdaftar di dalam
-        sistem.</q-item-label
+        >Data warung yang anda miliki akan termuat pada halaman ini, dan proses perubahan data dapat dilakukan dengan menekan tombol yang tersedia.</q-item-label
       >
     </div>
-    <q-card class="my-card q-pa-md">
+    <q-card class="my-card" flat>
       <div class="row q-gutter-sm">
-        <div class="col">
+        <div class="col-4">
           <q-card class="my-card bg-grey-3" flat>
             <q-item clickable v-ripple>
               <q-item-section>
@@ -30,22 +29,7 @@
             </q-item>
           </q-card>
         </div>
-
-        <div class="col"></div>
-
-        <div class="col"></div>
       </div>
-
-      <q-item-label
-        style="font-size: 16px"
-        class="text-weight-medium text-indigo-10 q-mt-md"
-        >Table data warung</q-item-label
-      >
-      <q-item-label
-        style="font-size: 12px"
-        class="text-caption text-grey-6 q-mb-md"
-        >Seluruh data warung yang terdaftar dalam sistem.</q-item-label
-      >
 
       <q-table
         :rows="rows"
@@ -79,25 +63,11 @@
             </div>
           </q-slide-transition>
         </template>
-        <template v-slot:header="props">
-          <q-tr :props="props">
-            <q-th
-              v-for="col in props.cols"
-              :key="col.name"
-              :props="props"
-              class="text-blue-10"
-            >
-              {{ col.label }}
-            </q-th>
-          </q-tr>
-        </template>
         <template v-slot:body="props">
           <q-tr :props="props">
-            <q-td key="NAMA" :props="props" class="text-capitalize">
-              <q-badge color="blue-10">{{ props.row.nama }}</q-badge>
-            </q-td>
-            <q-td key="KETERANGAN" :props="props" class="text-capitalize">
-              {{ props.row.keterangan }}
+            <q-td key="NAMA" :props="props" class="text-capitalize text-weight-bold">
+              {{ props.row.nama }}<br>
+              <q-badge color="blue-10">{{ props.row.keterangan }}</q-badge>
             </q-td>
             <q-td key="TGL_DAFTAR" :props="props" class="text-capitalize">
               {{ $parseDate(props.row.created_at).timeStap }}
@@ -247,12 +217,6 @@ export default {
           align: "left",
           label: "NAMA WARUNG",
           field: "NAMA"
-        },
-        {
-          name: "KETERANGAN",
-          align: "left",
-          label: "KETERANGAN",
-          field: "KETERANGAN"
         },
         {
           name: "TGL_DAFTAR",

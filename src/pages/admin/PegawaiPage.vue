@@ -4,18 +4,17 @@
       <q-item-label
         style="font-size: 16px"
         class="text-weight-medium text-indigo-10"
-        >Main Pegawai</q-item-label
+        >Pegawai</q-item-label
       >
       <q-item-label
         style="font-size: 12px"
         class="text-caption text-grey-6 q-mb-md"
-        >Halaman visualiasi data pegawai yang terdaftar di dalam
-        sistem.</q-item-label
+        >Data pegawai yang anda miliki akan termuat pada halaman ini, dan proses perubahan data dapat dilakukan dengan menekan tombol yang tersedia.</q-item-label
       >
     </div>
-    <q-card class="my-card q-pa-md">
+    <q-card class="my-card" flat>
       <div class="row q-gutter-sm">
-        <div class="col">
+        <div class="col-4">
           <q-card class="my-card bg-grey-3" flat>
             <q-item clickable v-ripple>
               <q-item-section>
@@ -30,22 +29,7 @@
             </q-item>
           </q-card>
         </div>
-
-        <div class="col"></div>
-
-        <div class="col"></div>
       </div>
-
-      <q-item-label
-        style="font-size: 16px"
-        class="text-weight-medium text-indigo-10 q-mt-md"
-        >Table data pegawai</q-item-label
-      >
-      <q-item-label
-        style="font-size: 12px"
-        class="text-caption text-grey-6 q-mb-md"
-        >Seluruh data pegawai yang terdaftar dalam sistem.</q-item-label
-      >
 
       <q-table
         :rows="rows"
@@ -80,21 +64,10 @@
             </div>
           </q-slide-transition>
         </template>
-        <template v-slot:header="props">
-          <q-tr :props="props">
-            <q-th
-              v-for="col in props.cols"
-              :key="col.name"
-              :props="props"
-              class="text-blue-10"
-            >
-              {{ col.label }}
-            </q-th>
-          </q-tr>
-        </template>
         <template v-slot:body="props">
           <q-tr :props="props">
-            <q-td key="ROLE_PEGAWAI" :props="props" class="text-uppercase">
+            <q-td key="NAMA" :props="props" class="text-capitalize text-weight-bold">
+              {{ props.row.name }}<br />
               <div v-if="props.row.role === 0">
                 <q-badge color="positive">admin</q-badge>
               </div>
@@ -107,9 +80,6 @@
               <div v-else-if="props.row.role === 3">
                 <q-badge color="red">kasir</q-badge>
               </div>
-            </q-td>
-            <q-td key="NAMA" :props="props" class="text-capitalize">
-              {{ props.row.name }}<br />
               <q-badge color="blue-10" v-if="props.row.role == 3"
                 ><q-icon name="local_mall" color="white" class="q-mr-sm" />{{
                   props.row.warung.nama
@@ -400,12 +370,6 @@ export default {
       filter: null,
       visibles: false,
       columns: [
-        {
-          name: "ROLE_PEGAWAI",
-          align: "left",
-          label: "ROLE",
-          field: "ROLE_PEGAWAI"
-        },
         {
           name: "NAMA",
           align: "left",
