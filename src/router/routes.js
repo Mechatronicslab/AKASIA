@@ -12,22 +12,22 @@ const routes = [
       {
         path: "pegawai",
         name: "pegawai",
-        component: () => import("pages/admin/PegawaiPage.vue"),
+        component: () => import("src/pages/admin/pegawai/PegawaiPage.vue"),
       },
       {
         path: "add-pegawai",
         name: "pegawai_add",
-        component: () => import("pages/admin/PegawaiAddPage.vue"),
+        component: () => import("src/pages/admin/pegawai/PegawaiAddPage.vue"),
       },
       {
         path: "warung",
         name: "warung",
-        component: () => import("pages/admin/TokoPage.vue"),
+        component: () => import("src/pages/admin/toko/TokoPage.vue"),
       },
       {
         path: "add-warung",
         name: "warung_add",
-        component: () => import("pages/admin/TokoAddPage.vue"),
+        component: () => import("src/pages/admin/toko/TokoAddPage.vue"),
       },
       {
         path: "produk",
@@ -47,17 +47,17 @@ const routes = [
       {
         path: "satuan",
         name: "satuan",
-        component: () => import("pages/admin/SatuanPage.vue"),
+        component: () => import("src/pages/admin/produk/SatuanPage.vue"),
       },
       {
         path: "tiket",
         name: "tiket",
-        component: () => import("pages/admin/TiketPage.vue"),
+        component: () => import("src/pages/admin/tiket/TiketPage.vue"),
       },
       {
         path: "parkir",
         name: "parkir",
-        component: () => import("pages/admin/ParkirPage.vue"),
+        component: () => import("src/pages/admin/tiket/ParkirPage.vue"),
       },
     ],
   },

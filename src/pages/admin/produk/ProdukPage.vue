@@ -1,6 +1,6 @@
 <template>
   <q-page class="q-pa-md">
-    <div class="col">
+    <div class="col q-ml-md">
       <q-item-label
         style="font-size: 16px"
         class="text-weight-medium text-indigo-10"
@@ -9,22 +9,40 @@
       <q-item-label
         style="font-size: 12px"
         class="text-caption text-grey-6 q-mb-md"
-        >Data produk yang anda miliki akan termuat pada halaman ini, dan proses perubahan data dapat dilakukan dengan menekan tombol yang tersedia.</q-item-label
+        >Seluruh produk yang anda miliki dapat anda lihat mealui table data yang
+        tersedia.</q-item-label
       >
     </div>
     <q-card class="my-card" flat>
-      <div class="row q-gutter-sm">
-        <div class="col-4">
-          <q-card class="my-card bg-grey-3" flat>
+      <div class="row q-mb-md q-ml-md">
+        <div class="col-3">
+          <q-card>
             <q-item clickable v-ripple>
               <q-item-section>
-                <q-item-label caption class="text-weight-medium q-mb-xs"
+                <q-item-label
+                  caption
+                  class="text-indigo-10 text-weight-medium text-capitalize"
                   >Total produk</q-item-label
                 >
-                <q-item-label
+                <count-up
                   class="text-h6 text-weight-bold text-indigo-10 counter-animation"
-                  >{{ this.countKecamatan }}</q-item-label
-                >
+                  :end-val="this.countData.countProduk"
+                ></count-up>
+              </q-item-section>
+              <q-item-section
+                side
+                style="font-size: 12px"
+                class="text-weight-bold text-white"
+              >
+                <q-item-section>
+                  <q-avatar
+                    rounded
+                    size="3em"
+                    color="blue-10"
+                    text-color="white"
+                    icon="inventory"
+                  />
+                </q-item-section>
               </q-item-section>
             </q-item>
           </q-card>
@@ -45,30 +63,18 @@
         v-model:pagination="pagination"
       >
         <template v-slot:top>
-          <q-space />
-
-          <q-btn
-            flat
+          <q-input
+            outlined
+            debounce="300"
+            placeholder="Pencarian"
+            style="width: 400px"
             color="indigo"
-            icon="search"
-            @click="visibles = !visibles"
-            size="md"
-            round
-            class="q-mr-sm"
-          />
-          <q-slide-transition>
-            <div v-show="visibles">
-              <q-input
-                outlined
-                debounce="300"
-                placeholder="Pencarian"
-                style="width: 400px"
-                color="indigo"
-                v-model="filter"
-                dense
-              />
-            </div>
-          </q-slide-transition>
+            class="fit"
+            v-model="filter"
+            dense
+          >
+            <template v-slot:prepend> <q-icon name="search" /> </template>
+          </q-input>
         </template>
         <template v-slot:body="props">
           <q-tr
@@ -272,35 +278,35 @@
             </div>
           </q-card-section>
 
-            <div class="row items-start q-col-gutter-sm">
-              <q-input
-                standout="bg-blue-10 text-white"
-                v-model="form.nama"
-                class="text-white col-4 text-capitalize"
-                label="Nama produk"
-                dense
-                lazy-rules
-                :rules="defaultRules"
-              >
-                <template v-slot:prepend>
-                  <q-icon name="account_circle" class="q-pr-md" />
-                </template>
-              </q-input>
+          <div class="row items-start q-col-gutter-sm">
+            <q-input
+              standout="bg-blue-10 text-white"
+              v-model="form.nama"
+              class="text-white col-4 text-capitalize"
+              label="Nama produk"
+              dense
+              lazy-rules
+              :rules="defaultRules"
+            >
+              <template v-slot:prepend>
+                <q-icon name="account_circle" class="q-pr-md" />
+              </template>
+            </q-input>
 
-              <q-input
-                standout="bg-blue-10 text-white"
-                v-model="form.keterangan"
-                class="text-white col text-capitalize"
-                label="Keterangan"
-                dense
-                lazy-rules
-                :rules="kkRules"
-              >
-                <template v-slot:prepend>
-                  <q-icon name="description" class="q-pr-md" />
-                </template>
-              </q-input>
-            </div>
+            <q-input
+              standout="bg-blue-10 text-white"
+              v-model="form.keterangan"
+              class="text-white col text-capitalize"
+              label="Keterangan"
+              dense
+              lazy-rules
+              :rules="kkRules"
+            >
+              <template v-slot:prepend>
+                <q-icon name="description" class="q-pr-md" />
+              </template>
+            </q-input>
+          </div>
 
           <q-card-actions align="right" class="bg-grey-3 text-blue-10 q-py-md">
             <q-btn type="submit" label="Update Data" v-close-popup flat dense />
@@ -351,6 +357,7 @@
 </template>
 
 <script>
+import CountUp from "vue-countup-v3";
 const model = () => {
   return {
     nama: null,
@@ -360,11 +367,18 @@ const model = () => {
   };
 };
 
+const countAllModel = () => {
+  return {
+    countProduk: 0
+  };
+};
+
 export default {
   name: "IndexPage",
-  components: {},
+  components: { CountUp },
   data() {
     return {
+      countData: countAllModel(),
       GUID: null,
       form: model(),
       defaultRules: [
@@ -381,37 +395,37 @@ export default {
         {
           name: "NAMA",
           align: "left",
-          label: "NAMA PRODUK",
+          label: "Nama produk",
           field: "NAMA"
         },
         {
           name: "MODAL",
           align: "center",
-          label: "HARGA MODAL",
+          label: "Harga modal",
           field: "MODAL"
         },
         {
           name: "JUAL",
           align: "center",
-          label: "HARGA JUAL",
+          label: "Harga jual",
           field: "JUAL"
         },
         {
           name: "STOK",
           align: "center",
-          label: "STOK",
+          label: "Stok",
           field: "STOK"
         },
         {
           name: "DISKON",
           align: "center",
-          label: "DISKON",
+          label: "Diskon",
           field: "DISKON"
         },
         {
           name: "TGL_DAFTAR",
           align: "left",
-          label: "TGL. DAFTAR",
+          label: "Tanggal daftar",
           field: "TGL_DAFTAR"
         },
         {
@@ -434,10 +448,23 @@ export default {
   },
   created() {
     this.getData();
+    this.getCount();
     const dataDate = new Date();
     this.dateNow = this.$parseDate(dataDate).day;
   },
   methods: {
+    getCount: async function () {
+      this.$q.loading.show();
+      await this.$axios
+        .get(`dashboard`)
+        .finally(() => this.$q.loading.hide())
+        .then((response) => {
+          if (!this.$parseResponse(response.data)) {
+            this.countData = response.data.data;
+          }
+        })
+        .catch(() => this.$commonErrorNotif());
+    },
     async getData() {
       this.onRequest({
         pagination: this.pagination,
@@ -555,3 +582,22 @@ export default {
   }
 };
 </script>
+
+<style scoped>
+.counter-animation {
+  /* Gaya animasi CSS */
+  font-size: 20px;
+  font-weight: bold;
+  animation: counterAnimation linear 2s;
+}
+
+@keyframes counterAnimation {
+  from {
+    opacity: 0;
+  }
+
+  to {
+    opacity: 1;
+  }
+}
+</style>

@@ -34,7 +34,7 @@ export default {
         datasets: [
           {
             label: `Data ${this.title} Tahun ${this.year}`,
-            backgroundColor: ["#304FFE", "#ef6445"],
+            backgroundColor: ["#1976D2", "#1976D2"],
             borderRadius: 6,
             data: this.value,
             maxBarThickness: 100,

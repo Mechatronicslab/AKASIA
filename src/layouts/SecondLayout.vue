@@ -16,7 +16,7 @@
         <div class="row q-gutter-md">
           <q-btn flat size="md" icon="account_circle">
             <q-menu transition-show="jump-down" transition-hide="jump-up">
-              <q-list style="min-width: 100px">
+              <q-list style="min-width: 100px; width: 300px;">
                 <q-item clickable v-ripple>
                   <q-item-section side>
                     <q-avatar
@@ -28,10 +28,7 @@
                     />
                   </q-item-section>
                   <q-item-section>
-                    <q-item-label>{{ this.dataUser.user.name }}</q-item-label>
-                    <q-item-label caption>be admin</q-item-label>
-                  </q-item-section>
-                  <q-item-section side>
+                    <q-item-label class="text-capitalize">{{ this.dataUser.user.name }}</q-item-label>
                     <q-item-label caption>{{ this.timenow }}</q-item-label>
                   </q-item-section>
                 </q-item>
@@ -62,8 +59,7 @@
               rgba(0, 0, 0, 0.5),
               rgba(0, 0, 0, 0.5)
             ),
-            url('images/banner/bg_header.jpg');
-          background-repeat: no-repeat;
+            url('images/banner/header.jpg');
           background-size: cover;
         "
       >
@@ -73,7 +69,7 @@
           </q-item-section>
 
           <q-item-section>
-            <q-item-label class="text-white">{{
+            <q-item-label class="text-white text-capitalize">{{
               this.dataUser.user.name
             }}</q-item-label>
             <q-badge color="white" class="q-mt-xs">
@@ -342,7 +338,7 @@
           <q-item-section>
             <q-item-label>LEMBAH AKASIA</q-item-label>
             <q-item-label caption class="text-indigo-10"
-              >© Copyright 2023</q-item-label
+              >© Copyright {{this.yearnow}}</q-item-label
             >
           </q-item-section>
         </q-item>
@@ -363,13 +359,15 @@ export default {
     return {
       leftDrawerOpen: false,
       timenow: null,
+      yearnow: null,
       dataUser: this.$q.localStorage.getItem("data")
     };
   },
   created() {
-    const yearnow = new Date();
-    const date = this.$parseDate(yearnow).fullDate;
+    const dates = new Date();
+    const date = this.$parseDate(dates).fullDate;
     this.timenow = date;
+    this.yearnow = this.$parseDate(dates).years;
   },
   methods: {
     logout() {
