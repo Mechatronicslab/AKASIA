@@ -16,7 +16,7 @@
         <div class="row q-gutter-md">
           <q-btn flat size="md" icon="account_circle">
             <q-menu transition-show="jump-down" transition-hide="jump-up">
-              <q-list style="min-width: 100px; width: 300px;">
+              <q-list style="min-width: 100px; width: 300px">
                 <q-item clickable v-ripple>
                   <q-item-section side>
                     <q-avatar
@@ -28,7 +28,9 @@
                     />
                   </q-item-section>
                   <q-item-section>
-                    <q-item-label class="text-capitalize">{{ this.dataUser.user.name }}</q-item-label>
+                    <q-item-label class="text-capitalize">{{
+                      this.dataUser.user.name
+                    }}</q-item-label>
                     <q-item-label caption>{{ this.timenow }}</q-item-label>
                   </q-item-section>
                 </q-item>
@@ -108,8 +110,27 @@
             </q-item-section>
             <q-item-section> Dashboard </q-item-section>
           </q-item>
+          <q-item
+            active-class="tab-active"
+            exact
+            class="navigation-item text-grey-6 text-weight-medium"
+            clickable
+            :to="{ name: 'tikets' }"
+            v-ripple
+          >
+            <q-item-section avatar>
+              <q-avatar
+                rounded
+                size="30px"
+                color="blue-10"
+                text-color="white"
+                icon="pin"
+              />
+            </q-item-section>
+            <q-item-section> Tiket </q-item-section>
+          </q-item>
 
-          <q-expansion-item
+          <!-- <q-expansion-item
             class="navigation-item text-grey-6 text-weight-medium"
           >
             <template v-slot:header>
@@ -134,7 +155,7 @@
               v-ripple
             >
               <q-item-section avatar> </q-item-section>
-              <q-item-section> Tiket </q-item-section>
+              <q-item-section> Tikets </q-item-section>
             </q-item>
 
             <q-item
@@ -147,7 +168,7 @@
               <q-item-section avatar> </q-item-section>
               <q-item-section> Parkir </q-item-section>
             </q-item>
-          </q-expansion-item>
+          </q-expansion-item> -->
 
           <q-item
             active-class="tab-active"
@@ -338,7 +359,7 @@
           <q-item-section>
             <q-item-label>LEMBAH AKASIA</q-item-label>
             <q-item-label caption class="text-indigo-10"
-              >© Copyright {{this.yearnow}}</q-item-label
+              >© Copyright {{ this.yearnow }}</q-item-label
             >
           </q-item-section>
         </q-item>

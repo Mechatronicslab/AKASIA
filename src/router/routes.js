@@ -51,7 +51,7 @@ const routes = [
       },
       {
         path: "tiket",
-        name: "tiket",
+        name: "tikets",
         component: () => import("src/pages/admin/tiket/TiketPage.vue"),
       },
       {

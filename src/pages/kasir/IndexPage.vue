@@ -580,7 +580,8 @@ Kembalian          ${kembalian}
 Terima kasih, datang kembali!
 `;
 
-      await this.btConnect();
+      // await this.btConnect();
+      await this.insertData();
       // console.log(this.printStatus);
       // if (this.printStatus) {
       //   await this.$axios
@@ -602,14 +603,20 @@ Terima kasih, datang kembali!
       // }
     },
     checkout(DATA) {
+      console.log("dsini datanya");
+      console.log(DATA);
+
       this.dialog = true;
       this.GUID = DATA.GUID;
       this.dialogCheckout.nama = DATA.nama;
       this.dialogCheckout.harga = DATA.harga;
+      this.dialogCheckout.hargaDiskon = DATA.hargaDiskon;
       this.dialogCheckout.stok = DATA.stok;
+      this.dialogCheckout.modal = DATA.modal;
       this.dialogCheckout.satuan = DATA.satuan;
       this.dialogCheckout.keterangan = DATA.keterangan;
       this.dialogCheckout.diskon = DATA.diskon;
+
     },
     onCheckout() {
       var namaProduk = this.dialogCheckout.nama;
@@ -618,6 +625,9 @@ Terima kasih, datang kembali!
       var satuanProduk = this.dialogCheckout.satuan;
       var modal = this.dialogCheckout.modal;
       var diskon = this.dialogCheckout.diskon;
+      var hargaDiskon = this.dialogCheckout.hargaDiskon;
+      console.log("oncheckout");
+      console.log(this.dialogCheckout);
       var adaDiskon = 0;
       if (diskon > 0) {
         adaDiskon = 1;
@@ -651,7 +661,7 @@ Terima kasih, datang kembali!
 
       this.dialog = false;
       this.newValue = 1;
-      console.log(this.rows);
+      console.log(this.keranjangBelanja);
     },
     hapusData(DATA) {
       console.log(DATA);
