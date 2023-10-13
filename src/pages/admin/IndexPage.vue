@@ -139,8 +139,7 @@
               <count-up
                 class="text-h6 text-weight-bold text-indigo-10 counter-animation"
                 :end-val="this.countData.countProduk"
-              ></count-up
-              >
+              ></count-up>
             </q-item-section>
             <q-item-section
               side
@@ -173,8 +172,7 @@
               <count-up
                 class="text-h6 text-weight-bold text-indigo-10 counter-animation"
                 :end-val="this.countData.countPegawai"
-              ></count-up
-              >
+              ></count-up>
             </q-item-section>
             <q-item-section
               side
@@ -207,8 +205,7 @@
               <count-up
                 class="text-h6 text-weight-bold text-indigo-10 counter-animation"
                 :end-val="this.countData.countWarung"
-              ></count-up
-              >
+              ></count-up>
             </q-item-section>
             <q-item-section
               side
@@ -241,8 +238,7 @@
               <count-up
                 class="text-h6 text-weight-bold text-indigo-10 counter-animation"
                 :end-val="this.countData.countWarung"
-              ></count-up
-              >
+              ></count-up>
             </q-item-section>
             <q-item-section
               side
@@ -256,6 +252,82 @@
                   color="blue-10"
                   text-color="white"
                   icon="confirmation_number"
+                />
+              </q-item-section>
+            </q-item-section>
+          </q-item>
+        </q-card>
+      </div>
+    </div>
+
+    <div class="row items-start q-col-gutter-sm q-mt-sm">
+      <div class="col-3">
+        <q-card>
+          <q-item clickable v-ripple>
+            <q-item-section>
+              <q-item-label
+                caption
+                class="text-indigo-10 text-weight-medium text-capitalize"
+                >Total transaksi Hari ini</q-item-label
+              >
+              <count-up
+                class="text-h6 text-weight-bold text-indigo-10 counter-animation"
+                :end-val="this.omsetNow"
+              >
+                <template #prefix>
+                  <span>Rp. </span>
+                </template></count-up
+              >
+            </q-item-section>
+            <q-item-section
+              side
+              style="font-size: 12px"
+              class="text-weight-bold text-white"
+            >
+              <q-item-section>
+                <q-avatar
+                  rounded
+                  size="3em"
+                  color="green"
+                  text-color="white"
+                  icon="point_of_sale"
+                />
+              </q-item-section>
+            </q-item-section>
+          </q-item>
+        </q-card>
+      </div>
+
+      <div class="col-3">
+        <q-card>
+          <q-item clickable v-ripple>
+            <q-item-section>
+              <q-item-label
+                caption
+                class="text-indigo-10 text-weight-medium text-capitalize"
+                >Total keuntungan Hari ini</q-item-label
+              >
+              <count-up
+                class="text-h6 text-weight-bold text-indigo-10 counter-animation"
+                :end-val="this.keuntunganNow"
+              >
+                <template #prefix>
+                  <span>Rp. </span>
+                </template></count-up
+              >
+            </q-item-section>
+            <q-item-section
+              side
+              style="font-size: 12px"
+              class="text-weight-bold text-white"
+            >
+              <q-item-section>
+                <q-avatar
+                  rounded
+                  size="3em"
+                  color="blue"
+                  text-color="white"
+                  icon="savings"
                 />
               </q-item-section>
             </q-item-section>
@@ -346,6 +418,9 @@ export default {
   },
   data() {
     return {
+      omsetNow: null,
+      keuntunganNow: null,
+      modalNow: null,
       countData: countAllModel(),
       arrayMonth: [
         "January",
@@ -374,6 +449,7 @@ export default {
     this.getCount();
     this.getLog();
     this.renderChartOmset();
+    this.getCountByDay();
     const dates = new Date();
     this.yearnow = this.$parseDate(dates).fullDate;
   },
@@ -408,17 +484,42 @@ export default {
         })
         .catch(() => this.$commonErrorNotif());
     },
+    getCountByDay: async function () {
+      let now = { date: this.$parseDate(new Date()).dateLocal };
+      console.log(now);
+      this.$q.loading.show();
+      await this.$axios
+        .post(`dashboard/getCountTransaksiByDay`, now)
+        .finally(() => this.$q.loading.hide())
+        .then((response) => {
+          if (response.data.data.length > 0) {
+            if (!this.$parseResponse(response.data)) {
+              // this.countData = response.data.data;
+              this.omsetNow = response.data.data[0].omset;
+              this.keuntunganNow = response.data.data[0].keuntungan;
+              this.modalNow = response.data.data[0].modal;
+            }
+          }
+        })
+        .catch((err) => {
+          console.log(err);
+          this.$commonErrorNotif();
+        });
+    },
     renderChartOmset: async function () {
       await this.$axios
         .get(`dashboard/getCountTransaksiByMounth`)
         .then((res) => {
           if (!this.$parseResponse(res.data)) {
-            res.data.data.forEach((datax) => {
-              this.arrayOmset[datax._id.month - 1] = datax.omset;
-              this.arrayKeuntungan[datax._id.month - 1] = datax.keuntungan;
-            });
-            this.year = res.data.data[0]._id.year;
-            this.loading = false;
+            console.log(res.data.data);
+            if (res.data.data.length > 0) {
+              res.data.data.forEach((datax) => {
+                this.arrayOmset[datax._id.month - 1] = datax.omset;
+                this.arrayKeuntungan[datax._id.month - 1] = datax.keuntungan;
+              });
+              this.year = res.data.data[0]._id.year;
+              this.loading = false;
+            }
           }
         })
         .catch((err) => console.log(err));
