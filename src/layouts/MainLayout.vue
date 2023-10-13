@@ -3,7 +3,7 @@
     <q-header style="background: rgba(0, 0, 0, 0)">
       <q-toolbar>
         <q-toolbar-title>
-          <div class="col q-my-md q-mx-md text-uppercase">
+          <div class="col q-my-md q-mx-sm text-uppercase">
             <q-badge color="blue-10" class="q-px-md q-py-sm">
               <q-item-label
                 style="font-size: 20px"

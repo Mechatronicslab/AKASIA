@@ -3,7 +3,7 @@
     <q-card
       class="my-card"
       style="
-        width: 60%;
+        width: 70%;
         background: url('images/banner/bg-card.jpg');
         background-size: cover;
         background-repeat: no-repeat;
@@ -12,8 +12,8 @@
       <div class="row">
         <div class="col q-pa-xl">
           <q-item-label
-            style="font-size: 16px"
-            class="text-weight-medium text-white"
+            style="font-size: 20px"
+            class="text-weight-bold text-white"
             >Layanan kami</q-item-label
           >
           <div
@@ -32,9 +32,15 @@
             <q-list dense>
               <q-item>
                 <q-item-section>
-                  <q-item-label class="text-weight-bold">Management produk</q-item-label>
-                  <q-item-label caption class="text-white" style="font-size: 11px"
-                    >Kelola barang dagangan kamu dan lakukan pencatatan secara berkala.</q-item-label
+                  <q-item-label class="text-weight-bold"
+                    >Management produk</q-item-label
+                  >
+                  <q-item-label
+                    caption
+                    class="text-white"
+                    style="font-size: 11px"
+                    >Kelola barang dagangan kamu dan lakukan pencatatan secara
+                    berkala.</q-item-label
                   >
                 </q-item-section>
               </q-item>
@@ -42,8 +48,12 @@
               <q-item>
                 <q-item-section>
                   <q-item-label class="text-weight-bold">Kasir</q-item-label>
-                  <q-item-label caption class="text-white" style="font-size: 11px"
-                    >Kamu bisa mendaftarkan petugas mu untuk menjadi kasir dengan akses terpisah.</q-item-label
+                  <q-item-label
+                    caption
+                    class="text-white"
+                    style="font-size: 11px"
+                    >Kamu bisa mendaftarkan petugas mu untuk menjadi kasir
+                    dengan akses terpisah.</q-item-label
                   >
                 </q-item-section>
               </q-item>
@@ -89,7 +99,7 @@
                 dense
               >
                 <template v-slot:prepend>
-                  <q-icon name="account_circle" color="grey" size="xs" />
+                  <q-icon name="mail" color="grey" size="xs" />
                   <q-separator vertical class="q-ml-sm" /> </template
               ></q-input>
               <q-item-label class="text-weight-medium text-white q-mt-md"
@@ -126,9 +136,9 @@
             <div class="col">
               <q-item-label
                 style="font-size: 13px"
-                class="text-weight-bold text-white q-mb-sm"
+                class="text-weight-bold text-white q-mb-sm flex"
               >
-                <q-badge color="white">
+                <q-badge color="white" class="q-mr-sm">
                   <q-icon name="campaign" color="blue-10" />
                 </q-badge>
                 Informasi

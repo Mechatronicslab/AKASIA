@@ -14,7 +14,7 @@
     </div>
 
     <div class="row items-start q-col-gutter-sm">
-      <div class="col-3">
+      <div class="col-4">
         <q-card>
           <q-item clickable v-ripple>
             <q-item-section>
@@ -51,7 +51,7 @@
         </q-card>
       </div>
 
-      <div class="col-3">
+      <div class="col-4">
         <q-card>
           <q-item clickable v-ripple>
             <q-item-section>
@@ -88,7 +88,7 @@
         </q-card>
       </div>
 
-      <div class="col-3">
+      <div class="col-4">
         <q-card>
           <q-item clickable v-ripple>
             <q-item-section>
@@ -430,7 +430,7 @@ export default {
 <style scoped>
 .counter-animation {
   /* Gaya animasi CSS */
-  font-size: 20px;
+  font-size: 15px;
   font-weight: bold;
   animation: counterAnimation linear 2s;
 }

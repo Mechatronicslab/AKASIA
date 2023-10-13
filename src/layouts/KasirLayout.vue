@@ -1,6 +1,6 @@
 <template>
   <q-layout view="lHh Lpr lFf">
-    <q-header class="bg-blue-10 text-white">
+    <q-header class="bg-blue-grey-10 text-white">
       <q-toolbar>
         <div class="row q-gutter-md flex flex-center">
           <q-item>
@@ -24,9 +24,9 @@
 
         <q-btn flat dense round icon="print" aria-label="Setting Printer" :to="{ name: 'printer' }" />
 
-        <q-btn flat dense round icon="menu" aria-label="Menu">
+        <q-btn flat dense round icon="account_circle" aria-label="Menu">
           <q-menu transition-show="jump-down" transition-hide="jump-up">
-            <q-list style="min-width: 100px">
+            <q-list style="min-width: 100px; width: 350px;">
               <q-item clickable v-ripple>
                 <q-item-section side>
                   <q-avatar
@@ -34,12 +34,12 @@
                     size="48px"
                     icon="account_circle"
                     class="text-white"
-                    color="indigo-10"
+                    color="blue-grey-10"
                   />
                 </q-item-section>
                 <q-item-section>
                   <q-item-label>{{ this.dataUser.user.name }}</q-item-label>
-                  <q-item-label caption>be kasir</q-item-label>
+                  <q-item-label caption>Bagian kasir</q-item-label>
                 </q-item-section>
                 <q-item-section side>
                   <q-item-label caption>{{ this.timenow }}</q-item-label>
@@ -53,7 +53,7 @@
               </q-item>
               <q-separator />
               <q-item clickable @click="logout()">
-                <q-item-section>Logout</q-item-section>
+                <q-item-section>Sign out</q-item-section>
               </q-item>
             </q-list>
           </q-menu>
